@@ -1,0 +1,55 @@
+{
+  "expo": {
+    "owner": "dev5cenfotec",
+    "name": "DEV5-Front-End",
+    "slug": "DEV5-Front-End",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/linko-logo.png",
+    "scheme": "myapp",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.dev5cenfotec.DEV5FrontEnd",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/linko-logo.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.dev5cenfotec.DEV5FrontEnd"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/linko-logo.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/linko-logo.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#ffffff"
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "36ff444e-7e29-463f-a31f-aa1dc8c30479"
+      }
+    }
+  }
+}
