@@ -1,50 +1,58 @@
-# Welcome to your Expo app 👋
+# 📱 React Native App con Expo
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+## 📌 Requisitos previos
 
-## Get started
+Antes de comenzar, asegúrate de tener instalado lo siguiente en tu sistema:
 
-1. Install dependencies
+- **Node.js** (versión recomendada: LTS) 👉 [Descargar aquí](https://nodejs.org/)
+- **Git** 👉 [Descargar aquí](https://git-scm.com/)
+- **Expo CLI** (Instalar con `npm install -g expo-cli`)
 
-   ```bash
-   npm install
-   ```
+## 🚀 Instalación y configuración
 
-2. Start the app
+Sigue estos pasos para configurar y ejecutar la aplicación en tu entorno:
 
-   ```bash
-    npx expo start
-   ```
+### 1️⃣ Clonar el repositorio
 
-In the output, you'll find options to open the app in a
+### 2️⃣ Instalar dependencias
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+Ejecuta el siguiente comando en la raíz del proyecto:
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```sh
+ npm install
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### 3️⃣ Configurar el entorno de desarrollo
 
-## Learn more
+#### ➤ Opción 1: Usar un emulador (Android o iOS)
 
-To learn more about developing your project with Expo, look at the following resources:
+Si prefieres usar un emulador, sigue las instrucciones según tu sistema operativo:
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+- [Guía oficial](https://reactnative.dev/docs/set-up-your-environment)
 
-## Join the community
+#### ➤ Opción 2 (Recomendada): Usar un dispositivo físico
 
-Join our community of developers creating universal apps.
+1. Instala la aplicación **Expo Go** en tu teléfono:
+   - 📱 [Documentación de descarga](https://docs.expo.dev/get-started/set-up-your-environment/)
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+### 4️⃣ Ejecutar la aplicación
+
+Una vez configurado el entorno, inicia el servidor de desarrollo con:
+
+```sh
+ npm run start
+```
+
+Aparecerá un código QR en la terminal. Escanéalo con la app **Expo Go** para ejecutar la aplicación en tu dispositivo. Finalmente verifiquen que se está usando **Expo Go** en consola, caso contrario las indicaciones aparecen en las opciones.
+
+## 📖 Guía de desarrollo
+
+Para mantener un código limpio y consistente, seguimos estas convenciones de nomenclatura:
+
+- **Enums** → PascalCase → `enum UserRole { Admin, User }`
+- **Constantes** → UPPER_SNAKE_CASE → `const API_BASE_URL = "..."`
+- **Variables y funciones** → camelCase → `const userName = "..."`
+- **Componentes de React** → PascalCase → `const UserProfile = () => {...}`
+- **Hooks de React** → camelCase → `const useAuth = () => {...}`
+- **Stores** → Deben terminar con el sufijo `-store`, por ejemplo: `user-store.tsx`
+- **Nombres de archivos** → kebab-case → `este-es-mi-archivo.tsx`

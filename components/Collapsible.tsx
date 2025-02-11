@@ -1,7 +1,7 @@
 import { PropsWithChildren, useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
-import { ThemedText } from "@/components/ThemedText";
-import { IconSymbol } from "@/components/ui/IconSymbol";
+import { ThemedText } from "@/components/themed-text";
+import { MaterialIcons } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
 
 export function Collapsible({
@@ -17,8 +17,8 @@ export function Collapsible({
         onPress={() => setIsOpen((value) => !value)}
         activeOpacity={0.8}
       >
-        <IconSymbol
-          name="chevron.right"
+        <MaterialIcons
+          name="keyboard-arrow-down"
           size={18}
           weight="medium"
           color={Colors.icon}

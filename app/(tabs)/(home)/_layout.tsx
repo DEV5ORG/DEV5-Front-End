@@ -1,5 +1,5 @@
 import HeaderLeftIcon from "@/components/navigation/header-left-icon";
-import { ThemedText } from "@/components/ThemedText";
+import { ThemedText } from "@/components/themed-text";
 import { Colors } from "@/constants/Colors";
 import { AntDesign } from "@expo/vector-icons";
 import { Stack } from "expo-router";
