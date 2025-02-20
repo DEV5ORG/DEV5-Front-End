@@ -4,7 +4,7 @@ import { Platform } from "react-native";
 import { HapticTab } from "@/components/haptic-tab";
 import TabBarBackground from "@/components/ui/tab-bar-background";
 import { MaterialIcons } from "@expo/vector-icons";
-import { Colors } from "@/constants/Colors";
+import { Colors } from "@/assets/constants/Colors";
 
 export default function TabLayout() {
   return (
