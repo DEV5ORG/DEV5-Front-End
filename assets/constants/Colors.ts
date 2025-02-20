@@ -13,4 +13,8 @@ export const Colors = {
   icon: "#687076",
   tabIconDefault: "#687076",
   tabIconSelected: tintColorLight,
+  activityIndicator:  "#0000ff",
+  blueButton: "#4169E1",
+  link: "#0047AB",
+  backgroundLight: "#f5f5f5",
 };
