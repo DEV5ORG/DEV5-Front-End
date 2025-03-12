@@ -14,17 +14,16 @@ export const AuthGuard = observer(({ children }: IAuthGuardProps) => {
 
   useEffect(() => {
     if (authStore.isLoading) return;
-
     const inAuthGroup = segments[0] === "(tabs)";
     const inPublicGroup =
       segments[0] === "(public)" || segments[0] === "+not-found";
 
-    if (!authStore.user && !inPublicGroup) {
+    if (!authStore.isLoggedIn && !inPublicGroup) {
       router.replace("/(public)/login");
-    } else if (authStore.user && inAuthGroup) {
+    } else if (authStore.isLoggedIn && inAuthGroup) {
       router.replace("/");
     }
-  }, [authStore.user, segments, authStore.isLoading]);
+  }, [authStore.isLoggedIn, segments, authStore.isLoading]);
 
   if (authStore.isLoading) {
     return null;

@@ -10,12 +10,11 @@ type Errors<T extends FormValues> = {
 
 interface ValidationSchema {
   [key: string]: {
-    required?: boolean;
-    isEmail?: boolean;
-    pattern?: RegExp;
-    minLength?: number;
-    test?: (value: string) => boolean;
-    message?: string;
+    required?: { value: boolean; message: string };
+    isEmail?: { value: boolean; message: string };
+    pattern?: { value: RegExp; message: string };
+    minLength?: { value: number; message: string };
+    test?: { value: (value: string) => boolean; message: string };
   };
 }
 
@@ -52,32 +51,29 @@ const useForm = <T extends FormValues>({
     let isValid = true;
     let errorMessage = "";
 
-    if (rules?.required && value === "") {
+    if (rules?.required?.value && value === "") {
       isValid = false;
-      errorMessage = rules.message || `${String(field)} es obligatorio.`;
+      errorMessage = rules.required.message;
     }
 
-    if (rules?.isEmail && value && !emailPattern.test(value)) {
+    if (rules?.isEmail?.value && value && !emailPattern.test(value)) {
       isValid = false;
-      errorMessage = rules.message || `${String(field)} no es válido.`;
+      errorMessage = rules.isEmail.message;
     }
 
-    if (rules?.pattern && value && !rules.pattern.test(value)) {
+    if (rules?.pattern?.value && value && !rules.pattern.value.test(value)) {
       isValid = false;
-      errorMessage = rules.message || `${String(field)} no es válido.`;
+      errorMessage = rules.pattern.message;
     }
 
-    if (rules?.minLength && value.length < rules.minLength) {
+    if (rules?.minLength?.value && value.length < rules.minLength.value) {
       isValid = false;
-      errorMessage =
-        rules.message ||
-        `${String(field)} debe tener al menos ${rules.minLength} caracteres.`;
+      errorMessage = rules.minLength.message;
     }
 
-    if (rules?.test && !rules.test(value)) {
+    if (rules?.test?.value && !rules.test.value(value)) {
       isValid = false;
-      errorMessage =
-        rules.message || `${String(field)} no cumple con el formato requerido.`;
+      errorMessage = rules.test.message;
     }
 
     if (!isValid) {

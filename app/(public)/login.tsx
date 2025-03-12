@@ -21,13 +21,17 @@ const Login = observer(() => {
       preventMultipleSubmissions: true,
       validationSchema: {
         email: {
-          required: true,
-          isEmail: true,
-          message: "El correo no es válido.",
+          required: {
+            value: true,
+            message: "El correo es obligatorio.",
+          },
+          isEmail: { value: true, message: "Debe ser un correo válido." },
         },
         password: {
-          required: true,
-          message: "La contraseña es obligatoria",
+          required: {
+            value: true,
+            message: "La contraseña es obligatoria.",
+          },
         },
       },
     });
@@ -37,7 +41,7 @@ const Login = observer(() => {
       const { email, password } = formData;
       const { token } = await signIn(email, password);
       await authStore.storeSignInData(token);
-      router.push("/");
+      router.replace("/");
     } catch (error) {
       if (error instanceof Error) {
         toastStore.addToast(error.message, "error", 2000);

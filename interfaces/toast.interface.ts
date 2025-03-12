@@ -1,6 +1,6 @@
 export type ToastSeverity = "success" | "error" | "warning" | "info";
 
-export interface Toast {
+export interface IToast {
   id: number;
   message: string;
   severity: ToastSeverity;

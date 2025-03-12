@@ -1,6 +1,5 @@
-import { STORE_TOKEN_ITEM_NAME } from "@/constants/constants";
+import { getAuthStore } from "@/context/root-store-provider";
 import axios from "axios";
-import * as SecureStore from "expo-secure-store";
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
@@ -12,10 +11,13 @@ const api = axios.create({
 });
 
 api.interceptors.request.use(async (config) => {
-  const token = await SecureStore.getItemAsync(STORE_TOKEN_ITEM_NAME);
+  const authStore = getAuthStore();
+  const token = authStore.authToken;
+
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
+
   return config;
 });
 

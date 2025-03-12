@@ -1,9 +1,9 @@
 import { makeAutoObservable } from "mobx";
 import { RootStore } from "./root-store";
-import { Toast, ToastSeverity } from "@/interfaces/toast.interface";
+import { IToast, ToastSeverity } from "@/interfaces/toast.interface";
 
 export class ToastStore {
-  toasts: Toast[] = [];
+  toasts: IToast[] = [];
   nextId = 1;
   toastTimers = new Map<number, NodeJS.Timeout>();
   root: RootStore;
@@ -13,27 +13,47 @@ export class ToastStore {
     this.root = root;
   }
 
+  setToasts(toasts: IToast[]) {
+    this.toasts = toasts;
+  }
+
+  setNextId(id: number) {
+    this.nextId = id;
+  }
+
+  setToastTimers(id: number, timer: NodeJS.Timeout) {
+    this.toastTimers.set(id, timer);
+  }
+
+  deleteToastTimer(id: number) {
+    this.toastTimers.delete(id);
+  }
+
   addToast(
     message: string,
     severity: ToastSeverity = "info",
     duration: number = 3000
   ) {
-    const id = this.nextId++;
-    const toast: Toast = { id, message, severity, duration };
+    const id = this.nextId;
+    this.setNextId(this.nextId + 1);
 
-    if (this.toasts.length >= 3) {
-      const oldestToast = this.toasts.shift();
+    const toast: IToast = { id, message, severity, duration };
+    const newToasts = [...this.toasts];
+
+    if (newToasts.length >= 3) {
+      const oldestToast = newToasts.shift();
       if (oldestToast) this.clearToastTimeout(oldestToast.id);
     }
 
-    this.toasts.push(toast);
+    newToasts.push(toast);
+    this.setToasts(newToasts);
 
     const timer = setTimeout(() => this.removeToast(id), duration);
-    this.toastTimers.set(id, timer);
+    this.setToastTimers(id, timer);
   }
 
   removeToast(id: number) {
-    this.toasts = this.toasts.filter((toast) => toast.id !== id);
+    this.setToasts(this.toasts.filter((toast) => toast.id !== id));
     this.clearToastTimeout(id);
   }
 
@@ -41,11 +61,11 @@ export class ToastStore {
     const timer = this.toastTimers.get(id);
     if (timer) {
       clearTimeout(timer);
-      this.toastTimers.delete(id);
+      this.deleteToastTimer(id);
     }
   }
 
   clearToasts() {
-    this.toasts = [];
+    this.setToasts([]);
   }
 }

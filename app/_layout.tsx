@@ -43,12 +43,12 @@ const RootLayoutContent = observer(() => {
   );
 });
 
-const RootLayout = () => {
+const RootLayout = observer(() => {
   return (
     <RootStoreProvider>
       <RootLayoutContent />
     </RootStoreProvider>
   );
-};
+});
 
 export default RootLayout;
