@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { View, Text, Image, TouchableOpacity, StyleSheet, Animated } from "react-native";
+import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { EventCardProps } from "@/interfaces/event-card.interface";
-import { Colors } from "@/assets/constants/Colors";
+import { Colors } from "@/constants/Colors";
 
 const EventCard: React.FC<EventCardProps> = ({
   image,
@@ -23,12 +23,14 @@ const EventCard: React.FC<EventCardProps> = ({
       <Text style={styles.sectionTitle}>{sectionTitle}</Text>
       {Object.entries(data).map(([key, value]) => {
         // Skip certain fields we don't want to display
-        if (key === 'image' || key === 'isEditable') return null;
-        
+        if (key === "image" || key === "isEditable") return null;
+
         return (
           <View key={key} style={styles.detailRow}>
             <Text style={styles.detailLabel}>
-              {key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1')}:
+              {key.charAt(0).toUpperCase() +
+                key.slice(1).replace(/([A-Z])/g, " $1")}
+              :
             </Text>
             <Text style={styles.detailValue}>{value as string}</Text>
           </View>
@@ -57,7 +59,7 @@ const EventCard: React.FC<EventCardProps> = ({
             onPress={() => setExpanded(!expanded)}
           >
             <Text style={styles.moreInfoText}>
-              {expanded ? 'Menos información' : 'Más información'}
+              {expanded ? "Menos información" : "Más información"}
             </Text>
           </TouchableOpacity>
         )}
@@ -69,14 +71,11 @@ const EventCard: React.FC<EventCardProps> = ({
               <Text style={styles.totalPriceValue}>{totalPrice}</Text>
             </View>
 
-            {renderSection('Lugar', place)}
-            {renderSection('Comida', food)}
-            {renderSection('Entretenimiento', entertainment)}
+            {renderSection("Lugar", place)}
+            {renderSection("Comida", food)}
+            {renderSection("Entretenimiento", entertainment)}
 
-            <TouchableOpacity
-              style={styles.editButton}
-              onPress={onEdit}
-            >
+            <TouchableOpacity style={styles.editButton} onPress={onEdit}>
               <Text style={styles.editButtonText}>Editar Evento</Text>
             </TouchableOpacity>
           </View>
@@ -96,7 +95,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   expandedCard: {
     marginVertical: 15,
@@ -130,12 +129,12 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.link,
     padding: 10,
     borderRadius: 6,
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 10,
   },
   moreInfoText: {
-    color: 'white',
-    fontWeight: '500',
+    color: Colors.white,
+    fontWeight: "500",
   },
   expandedContent: {
     marginTop: 15,
@@ -144,21 +143,21 @@ const styles = StyleSheet.create({
     borderTopColor: Colors.black,
   },
   totalPriceContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 15,
     padding: 10,
     borderRadius: 6,
   },
   totalPriceLabel: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     color: Colors.text,
   },
   totalPriceValue: {
     fontSize: 16,
-    fontWeight: '700',
+    fontWeight: "700",
     color: Colors.black,
   },
   section: {
@@ -166,7 +165,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     color: Colors.text,
     marginBottom: 10,
     backgroundColor: Colors.backgroundLight,
@@ -174,8 +173,8 @@ const styles = StyleSheet.create({
     borderRadius: 6,
   },
   detailRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     paddingVertical: 4,
     paddingHorizontal: 8,
   },
@@ -188,17 +187,17 @@ const styles = StyleSheet.create({
     flex: 2,
     fontSize: 14,
     color: Colors.text,
-    textAlign: 'right',
+    textAlign: "right",
   },
   editButton: {
     padding: 12,
     borderRadius: 6,
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 15,
   },
   editButtonText: {
-    color: 'white',
-    fontWeight: '600',
+    color: "white",
+    fontWeight: "600",
     fontSize: 16,
   },
 });
