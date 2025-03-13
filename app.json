@@ -5,7 +5,7 @@
     "slug": "DEV5-Front-End",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/linko-logo.png",
+    "icon": "./assets/images/linko-typography-logo.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -18,7 +18,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/linko-logo.png",
+        "foregroundImage": "./assets/images/linko-typography-logo.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.dev5cenfotec.DEV5FrontEnd"
@@ -33,12 +33,13 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/linko-logo.png",
+          "image": "./assets/images/linko-typography-logo.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
-      ]
+      ],
+      "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true

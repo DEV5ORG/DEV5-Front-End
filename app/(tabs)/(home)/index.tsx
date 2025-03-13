@@ -1,15 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { ScrollView, ActivityIndicator, StyleSheet, View, TouchableOpacity } from "react-native";
+import {
+  ScrollView,
+  ActivityIndicator,
+  StyleSheet,
+  View,
+  TouchableOpacity,
+} from "react-native";
 import { ThemedText } from "@/components/themed-text";
 import EventCard from "@/components/cards/event-card";
 import { fetchEventData } from "@/services/client-events.service";
 import { EventCardProps } from "@/interfaces/event-card.interface";
-import { Colors } from "@/assets/constants/Colors";
+import { Colors } from "@/constants/Colors";
 import { useNavigation } from "@react-navigation/native";
+import { useStores } from "@/context/root-store-provider";
 
 const Home = () => {
   const [events, setEvents] = useState<EventCardProps[]>([]);
   const [loading, setLoading] = useState(true);
+  const { authStore } = useStores();
+  const { user } = authStore;
   useNavigation();
   useEffect(() => {
     const loadEvents = async () => {
@@ -58,13 +67,16 @@ const Home = () => {
   );
 
   return (
-    <ScrollView 
+    <ScrollView
       contentContainerStyle={styles.container}
       showsVerticalScrollIndicator={false}
     >
       <View style={styles.header}>
         <View style={styles.titleContainer}>
-          <ThemedText type="title">Hola bebé!</ThemedText>
+          {/* Aqui se va a usar el nombre, de momento el token solo devuelve el email.
+          Este comentario es un recordatorio para actualizar cuando los 
+          cambios en el BE estén listos. */}
+          <ThemedText type="title">Hola {user?.email}</ThemedText>
         </View>
         <TouchableOpacity
           style={styles.newEventButton}
@@ -79,9 +91,7 @@ const Home = () => {
           <ActivityIndicator size="large" color={Colors.activityIndicator} />
         </View>
       ) : (
-        <View style={styles.eventsList}>
-          {events.map(renderEventCard)}
-        </View>
+        <View style={styles.eventsList}>{events.map(renderEventCard)}</View>
       )}
     </ScrollView>
   );
@@ -93,9 +103,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingTop: 20,
     paddingBottom: 10,
   },
@@ -110,13 +120,13 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   buttonText: {
-    color: 'white',
+    color: "white",
     fontSize: 14,
   },
   loaderContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     minHeight: 200,
   },
   eventsList: {
