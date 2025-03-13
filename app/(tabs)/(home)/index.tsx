@@ -6,11 +6,15 @@ import { fetchEventData } from "@/services/client-events.service";
 import { EventCardProps } from "@/interfaces/event-card.interface";
 import { Colors } from "@/assets/constants/Colors";
 import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "@/components/navigation/types"; // Importa los tipos
+
+type NavigationProps = NativeStackNavigationProp<RootStackParamList>;
 
 const Home = () => {
   const [events, setEvents] = useState<EventCardProps[]>([]);
   const [loading, setLoading] = useState(true);
-  useNavigation();
+  const navigation = useNavigation<NavigationProps>(); 
   useEffect(() => {
     const loadEvents = async () => {
       try {
@@ -31,14 +35,13 @@ const Home = () => {
 
   const handleEventEdit = (eventTitle: string) => {
     // Here you would handle the edit action
-    console.log(`Editing event: ${eventTitle}`);
-    // navigation.navigate('EditEvent', { eventTitle });
+  
+    
   };
 
   const handleNewEvent = () => {
     // Here you would navigate to the create event screen
-    console.log("Navigate to new event creation screen");
-    // navigation.navigate('CreateEvent');
+    navigation.navigate("createEvent")
   };
 
   const renderEventCard = (event: EventCardProps, index: number) => (
@@ -58,7 +61,7 @@ const Home = () => {
   );
 
   return (
-    <ScrollView 
+    <ScrollView
       contentContainerStyle={styles.container}
       showsVerticalScrollIndicator={false}
     >

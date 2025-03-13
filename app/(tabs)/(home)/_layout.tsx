@@ -22,6 +22,12 @@ const HomeLayout = () => {
           ),
         }}
       />
+       <Stack.Screen
+        name="createEvent"
+        options={{
+          headerTitle: () => <ThemedText>Crear Evento</ThemedText>,
+        }}
+      />
     </Stack>
   );
 };
