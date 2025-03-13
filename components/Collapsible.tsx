@@ -2,7 +2,7 @@ import { PropsWithChildren, useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { ThemedText } from "@/components/themed-text";
 import { MaterialIcons } from "@expo/vector-icons";
-import { Colors } from "@/assets/constants/Colors";
+import { Colors } from "@/constants/Colors";
 
 export function Collapsible({
   children,

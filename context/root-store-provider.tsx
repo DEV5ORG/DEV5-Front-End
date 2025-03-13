@@ -1,9 +1,18 @@
+import { AuthStore } from "@/stores/auth-store";
 import { RootStore } from "@/stores/root-store";
 import React, { createContext, ReactNode, useContext } from "react";
 
 let store: RootStore | undefined;
 const StoreContext = createContext<RootStore | undefined>(undefined);
 StoreContext.displayName = "StoreContext";
+
+export function getAuthStore(): AuthStore {
+  const rootStore = store;
+  if (!rootStore) {
+    throw new Error("Rootstore not available");
+  }
+  return rootStore.authStore;
+}
 
 export function useStores() {
   const context = useContext(StoreContext);
