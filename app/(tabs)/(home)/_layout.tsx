@@ -23,7 +23,7 @@ const HomeLayout = () => {
         }}
       />
        <Stack.Screen
-        name="createEvent"
+        name="create-event"
         options={{
           headerTitle: () => <ThemedText>Crear Evento</ThemedText>,
         }}

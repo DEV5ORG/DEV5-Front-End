@@ -35,7 +35,7 @@ const CreateEvent = () => {
   const [category, setCategory] = useState<Category>("Lugares");
   const [people, setPeople] = useState(100);
   const [budget, setBudget] = useState(225000);
-
+  console.log("event")
   const filteredEvents = eventData.filter(
     (item) =>
       item.price <= budget &&
