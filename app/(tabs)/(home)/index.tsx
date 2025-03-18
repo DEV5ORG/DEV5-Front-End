@@ -46,8 +46,8 @@ const Home = () => {
 
   const handleNewEvent = () => {
     // Here you would navigate to the create event screen
-    console.log("Navigate to new event creation screen");
-    // navigation.navigate('CreateEvent');
+    router.push("/(tabs)/(home)/services");
+
   };
 
   const renderEventCard = (event: EventCardProps, index: number) => (
