@@ -11,16 +11,16 @@ import EventCard from "@/components/cards/event-card";
 import { fetchEventData } from "@/services/client-events.service";
 import { EventCardProps } from "@/interfaces/event-card.interface";
 import { Colors } from "@/constants/Colors";
-import { useNavigation } from "@react-navigation/native";
 import { useStores } from "@/context/root-store-provider";
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
+
 
 const Home = () => {
   const [events, setEvents] = useState<EventCardProps[]>([]);
   const [loading, setLoading] = useState(true);
   const { authStore } = useStores();
   const { user } = authStore;
-  useNavigation();
+  const router = useRouter();
   useEffect(() => {
     const loadEvents = async () => {
       try {
@@ -41,8 +41,8 @@ const Home = () => {
 
   const handleEventEdit = (eventTitle: string) => {
     // Here you would handle the edit action
-    console.log(`Editing event: ${eventTitle}`);
-    // navigation.navigate('EditEvent', { eventTitle });
+  
+    
   };
 
   const handleNewEvent = () => {
