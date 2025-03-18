@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, Image, Pressable, StyleSheet, Dimensions, ScrollView } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
+import { useRouter } from "expo-router"; // Import useRouter
 
 type CardProps = {
   item: {
@@ -15,6 +16,18 @@ type CardProps = {
 };
 
 const ServiceProductCard = ({ item, isService }: CardProps) => {
+  const router = useRouter(); // Initialize the router
+
+  const handleButtonPress = () => {
+    if(isService) {
+    // Redirect to the product page and pass the product id
+    router.push({ pathname: "/(tabs)/(home)/products", params: { id: item.id } });
+    } else {
+    // Redirect to the service page and pass the service
+    router.push({ pathname: "/(tabs)/(home)/services" });
+    }
+  };
+
   return (
     <View style={styles.card}>
       {item.image ? (
@@ -27,7 +40,7 @@ const ServiceProductCard = ({ item, isService }: CardProps) => {
       <View style={styles.nameHolder}><Text style={styles.name}>{item.name}</Text></View>
       {isService && item.address && <View style={styles.locationHolder}><Text style={styles.location}>{item.address}</Text></View>}
       <View style={styles.descriptionHolder}><Text style={styles.description}>{item.description}</Text></View>
-      <Pressable style={styles.button} onPress={() => { }}>
+      <Pressable style={styles.button} onPress={handleButtonPress}>
         <Text style={styles.buttonText}>Ver Productos</Text>
       </Pressable>
     </View>
@@ -43,11 +56,10 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     elevation: 5,
     width: "48%", // Adjusted width for two cards per row
-    marginRight:1, // Ensure separation between cards horizontally
-    marginLeft:1, // Ensure separation between cards horizontally
+    marginRight: 1, // Ensure separation between cards horizontally
+    marginLeft: 1, // Ensure separation between cards horizontally
   },
   image: {
-    
     width: "100%",
     height: 150,
     borderRadius: 8,
