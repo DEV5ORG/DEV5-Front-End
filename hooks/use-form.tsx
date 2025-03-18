@@ -10,10 +10,14 @@ type Errors<T extends FormValues> = {
 
 interface ValidationSchema {
   [key: string]: {
-    required?: { value: boolean; message: string };
+    required?: {
+      value: boolean;
+      message: string | ((formValues: FormValues) => string);
+    };
     isEmail?: { value: boolean; message: string };
     pattern?: { value: RegExp; message: string };
     minLength?: { value: number; message: string };
+    isSecurePassword?: boolean;
     test?: { value: (value: string) => boolean; message: string };
   };
 }
@@ -45,6 +49,13 @@ const useForm = <T extends FormValues>({
     validateField(field, value);
   };
 
+  const evaluateMessage = (
+    message: string | ((formValues: FormValues) => string),
+    formValues: FormValues
+  ): string => {
+    return typeof message === "function" ? message(formValues) : message;
+  };
+
   const validateField = (field: keyof T, value: string): boolean => {
     value = value.trim();
     const rules = validationSchema[String(field)];
@@ -53,7 +64,7 @@ const useForm = <T extends FormValues>({
 
     if (rules?.required?.value && value === "") {
       isValid = false;
-      errorMessage = rules.required.message;
+      errorMessage = evaluateMessage(rules.required.message, formValues);
     }
 
     if (rules?.isEmail?.value && value && !emailPattern.test(value)) {
@@ -69,6 +80,41 @@ const useForm = <T extends FormValues>({
     if (rules?.minLength?.value && value.length < rules.minLength.value) {
       isValid = false;
       errorMessage = rules.minLength.message;
+    }
+
+    if (rules?.isSecurePassword) {
+      const password = value;
+      const errors: string[] = [];
+
+      if (password.length < 12) {
+        errors.push("La contraseña debe tener al menos 12 caracteres.");
+      }
+
+      if (!/[A-Z]/.test(password)) {
+        errors.push(
+          "La contraseña debe contener al menos una letra mayúscula."
+        );
+      }
+      if (!/[a-z]/.test(password)) {
+        errors.push(
+          "La contraseña debe contener al menos una letra minúscula."
+        );
+      }
+
+      if (!/\d/.test(password)) {
+        errors.push("La contraseña debe contener al menos un número.");
+      }
+
+      if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+        errors.push(
+          "La contraseña debe contener al menos un símbolo especial."
+        );
+      }
+
+      if (errors.length > 0) {
+        isValid = false;
+        errorMessage = errors[0];
+      }
     }
 
     if (rules?.test?.value && !rules.test.value(value)) {

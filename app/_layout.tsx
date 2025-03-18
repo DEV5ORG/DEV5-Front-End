@@ -36,7 +36,7 @@ const RootLayoutContent = observer(() => {
         <Stack.Screen name="(public)" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
       </Stack>
-      <StatusBar style="dark" />
+      <StatusBar style="dark" translucent={false} />
       {/* Toaster accesible globalmente */}
       <Toast />
     </AuthGuard>

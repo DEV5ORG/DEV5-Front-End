@@ -4,6 +4,7 @@ import { RootStore } from "./root-store";
 import { jwtDecode } from "jwt-decode";
 import { IUser } from "@/interfaces/user.interface";
 import { STORE_TOKEN_ITEM_NAME } from "@/constants/constants";
+import IJwtDecodedData from "@/interfaces/jwt-decode.interface";
 
 export class AuthStore {
   user: IUser | null = null;
@@ -48,10 +49,10 @@ export class AuthStore {
 
   async storeSignInData(token: string) {
     try {
-      const { sub: email } = jwtDecode(token);
+      const { sub: email, nombre, role } = jwtDecode<IJwtDecodedData>(token);
       await SecureStore.setItemAsync(STORE_TOKEN_ITEM_NAME, token);
       this.setToken(token);
-      this.setUser({ email: email || "" });
+      this.setUser({ name: nombre, email: email ?? "", role });
     } catch (error) {
       console.error(error);
     }
@@ -67,9 +68,9 @@ export class AuthStore {
     try {
       const token = await SecureStore.getItemAsync(STORE_TOKEN_ITEM_NAME);
       if (token && !this.isTokenExpired(token)) {
-        const { sub: email } = jwtDecode(token);
+        const { sub: email, nombre, role } = jwtDecode<IJwtDecodedData>(token);
         this.setToken(token);
-        this.setUser({ email: email || "" });
+        this.setUser({ name: nombre, email: email ?? "", role });
       } else {
         await SecureStore.deleteItemAsync(STORE_TOKEN_ITEM_NAME);
         this.setToken(null);
