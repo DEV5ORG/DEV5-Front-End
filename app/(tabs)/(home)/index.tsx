@@ -13,6 +13,7 @@ import { EventCardProps } from "@/interfaces/event-card.interface";
 import { Colors } from "@/constants/Colors";
 import { useNavigation } from "@react-navigation/native";
 import { useStores } from "@/context/root-store-provider";
+import { router } from "expo-router";
 
 const Home = () => {
   const [events, setEvents] = useState<EventCardProps[]>([]);

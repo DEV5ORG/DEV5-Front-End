@@ -75,11 +75,6 @@ const Services = () => {
       service.name.toLowerCase().includes(search.toLowerCase())
   );
 
-  const handleServiceSelect = (service: Service) => {
-    // Navigate to the route passed as a parameter with the service ID
-    router.push(`/(tabs)/(home)/products?serviceId=${service.id}`);
-  };
-
   return (
     <View style={styles.container}>
       {/* Search Bar */}
