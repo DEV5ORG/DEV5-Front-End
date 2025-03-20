@@ -7,6 +7,7 @@ import { useRouter } from "expo-router";
 import { useStores } from "@/context/root-store-provider";
 import { observer } from "mobx-react-lite";
 import useForm from "@/hooks/use-form";
+import Logo from "@/components/logo";
 
 const Login = observer(() => {
   const { authStore, toastStore } = useStores();
@@ -51,12 +52,13 @@ const Login = observer(() => {
     }
   };
 
+  const handleOnRegister = () => {
+    router.push("/(public)/register");
+  };
+
   return (
     <View style={styles.container}>
-      <Image
-        source={require("@/assets/images/linko-typography-logo.png")}
-        style={styles.logo}
-      />
+      <Logo size={120} style={styles.logo} />
       <CustomTextInput
         label="Correo"
         placeholder="Correo electrónico"
@@ -74,7 +76,6 @@ const Login = observer(() => {
         containerStyle={styles.inputSpacing}
         error={errors.password}
       />
-
       <CustomButton
         title={"Inicio"}
         loading={isLoading}
@@ -85,7 +86,7 @@ const Login = observer(() => {
       />
       <CustomButton
         title="Registro"
-        onPress={() => console.log("Registro")}
+        onPress={handleOnRegister}
         backgroundColor={Colors.turquoise}
         hasBorder={false}
         style={styles.buttonSpacing}
@@ -107,10 +108,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 40,
   },
   logo: {
-    width: 120,
-    height: 120,
     marginBottom: 30,
-    resizeMode: "contain",
   },
   resetText: {
     marginTop: 15,

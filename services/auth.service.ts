@@ -1,5 +1,9 @@
-import ISignInResponse from "@/interfaces/responses/sign-in.interface";
+import ISignInResponse, {
+  ISignUpResponse,
+} from "@/interfaces/responses/sign-in.interface";
 import api from "./axios-instance";
+import ICreateUserPayload from "@/interfaces/requests/create-user.interface";
+import axios from "axios";
 
 export const signIn = async (email: string, password: string) => {
   try {
@@ -11,7 +15,38 @@ export const signIn = async (email: string, password: string) => {
     });
     return data;
   } catch (error) {
-    console.log(error);
     throw new Error("Credenciales inválidas ");
+  }
+};
+
+export const signUp = async (userPayload: ICreateUserPayload) => {
+  const { name, email, password, role } = userPayload;
+  const signUpUserPayload = {
+    nombre: name,
+    correoElectronico: email,
+    contraseña: password,
+    role: role,
+  };
+  try {
+    const { data } = await api.post<ISignUpResponse>(
+      "/api/register",
+      signUpUserPayload
+    );
+    return data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const errorMessage =
+        error.response?.data?.message || error.response?.data;
+      if (
+        typeof errorMessage === "string" &&
+        errorMessage.includes("duplicate key value violates unique constraint")
+      ) {
+        throw new Error("El correo electrónico ya está registrado.");
+      }
+
+      throw new Error(errorMessage || "Error al registrar usuario.");
+    } else {
+      throw new Error("Ocurrió un error desconocido.");
+    }
   }
 };

@@ -45,6 +45,11 @@ Una vez configurado el entorno, inicia el servidor de desarrollo con:
 
 Aparecerá un código QR en la terminal. Escanéalo con la app **Expo Go** para ejecutar la aplicación en tu dispositivo. Finalmente verifiquen que se está usando **Expo Go** en consola, caso contrario las indicaciones aparecen en las opciones.
 
+### 4️⃣ Variables de ambiente
+```sh
+EXPO_PUBLIC_API_URL=https://dev5-back-end.onrender.com
+```
+
 ## 📖 Guía de desarrollo
 
 Para mantener un código limpio y consistente, seguimos estas convenciones de nomenclatura:
