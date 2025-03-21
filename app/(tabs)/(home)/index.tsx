@@ -12,10 +12,12 @@ import { fetchEventData } from "@/services/client-events.service";
 import { EventCardProps } from "@/interfaces/event-card.interface";
 import { Colors } from "@/constants/Colors";
 import { useStores } from "@/context/root-store-provider";
+import { getFirstWord } from "@/utils/text.utils";
+import { observer } from "mobx-react-lite";
 import { useRouter } from "expo-router";
 
 
-const Home = () => {
+const Home = observer(() => {
   const [events, setEvents] = useState<EventCardProps[]>([]);
   const [loading, setLoading] = useState(true);
   const { authStore } = useStores();
@@ -74,10 +76,9 @@ const Home = () => {
     >
       <View style={styles.header}>
         <View style={styles.titleContainer}>
-          {/* Aqui se va a usar el nombre, de momento el token solo devuelve el email.
-          Este comentario es un recordatorio para actualizar cuando los 
-          cambios en el BE estén listos. */}
-          <ThemedText type="title">Hola {user?.email}</ThemedText>
+          <ThemedText type="title">
+            Hola {getFirstWord(user?.name ?? "")}
+          </ThemedText>
         </View>
         <TouchableOpacity
           style={styles.newEventButton}
@@ -96,7 +97,7 @@ const Home = () => {
       )}
     </ScrollView>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {
