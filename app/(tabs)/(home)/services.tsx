@@ -1,17 +1,9 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  FlatList,
-  Pressable,
-  StyleSheet,
-  Dimensions,
-} from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, TextInput, FlatList, Pressable, StyleSheet, Dimensions } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
-import { useRouter } from "expo-router"; // Import the router
-import ServiceProductCard from "@/components/cards/ServiceProductCard";
 import { getServices } from "@/services/services.service";
+import ServiceProductCard from "@/components/cards/service-product-card";
+import { useRouter } from "expo-router";
 
 const { width } = Dimensions.get("window");
 const cardWidth = (width - 60) / 2;
@@ -37,7 +29,7 @@ const Services = () => {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState<Category>("Lugares");
   const [servicesData, setServicesData] = useState<Service[]>([]);
-
+  const router = useRouter();
   // Fetch services data from the API when the component mounts
   useEffect(() => {
     const fetchServices = async () => {
@@ -46,12 +38,12 @@ const Services = () => {
         if (response) {
           // Map the API response to match the `Service` type
           const mappedServices = response.map((service: any) => ({
-            id: service.id.toString()?service.id.toString():"Service Id", // Ensure id is a string
-            name: service.Nombre?service.Nombre:"Service Name",
-            category: service.tipoServicio === "Lugares" ? "Lugares" : service.tipoServicio === "Comidas" ? "Comidas" : "Otros",
-            description: service.descripcion || "No description available", // Using the first item for description temporarily
-            address: service.ubicacion?service.ubicacion:"Service Address",
-            image: service.imagen || null,
+            id: service?.id?.toString()?service.id.toString():null, // Ensure id is a string or null
+            name: service?.Nombre?service.Nombre:"Service Name",
+            category: service?.tipoServicio === "Lugares" ? "Lugares" : service.tipoServicio === "Comidas" ? "Comidas" : "Otros",
+            description: service?.descripcion || "No description available", // Using the first item for description temporarily
+            address: service?.ubicacion?service.ubicacion:"Service Address",
+            image: service?.imagen || null,
           }));
           setServicesData(mappedServices);
         }
@@ -84,35 +76,37 @@ const Services = () => {
           <MaterialIcons name="search" size={28} color="black" />
         </Pressable>
       </View>
+
       {/* Categories */}
       <View style={styles.categories}>
         {(["Lugares", "Comidas", "Otros"] as Category[]).map((cat) => (
           <Pressable
             key={cat}
             onPress={() => setCategory(cat)}
-            style={[
-              styles.categoryButton,
-              category === cat && styles.categoryButtonActive,
-            ]}
+            style={[styles.categoryButton, category === cat && styles.categoryButtonActive]}
           >
             <MaterialIcons name={icons[cat]} size={30} color="white" />
             <Text style={styles.categoryText}>{cat}</Text>
           </Pressable>
         ))}
       </View>
+
       {/* Service Cards */}
       <FlatList
         data={filteredServices}
         keyExtractor={(item) => item.id}
         numColumns={2}
-        contentContainerStyle={{ paddingBottom: 100, paddingHorizontal: 10 }}
-        columnWrapperStyle={{ justifyContent: "space-between" }}
+        contentContainerStyle={{
+          paddingBottom: 100,
+          paddingHorizontal: 10,
+        }}
+        columnWrapperStyle={{
+          justifyContent: "space-between",
+        }}
         renderItem={({ item }) => (
-          <ServiceProductCard
-            item={item}
-            isService={true}
-            onPress={() => handlePress(item.id,item.category)}
-          />
+          <ServiceProductCard item={item} isService={true} onPress={function (id: string, quantity?: number): void {
+            router.push(`/(tabs)/(home)/products?id=${id}`);
+          } } />
         )}
       />
     </View>
@@ -127,7 +121,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderRadius: 25,
     paddingHorizontal: 20,
-    height: 40,
+    height: 50,
     elevation: 5,
     marginBottom: 20,
   },
