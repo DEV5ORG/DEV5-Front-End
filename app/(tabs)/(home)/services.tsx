@@ -1,8 +1,16 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, FlatList, Pressable, StyleSheet, Dimensions } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  FlatList,
+  Pressable,
+  StyleSheet,
+  Dimensions,
+} from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router"; // Import the router
-import ServiceProductCard from "@/components/cards/ServiceProductCard";
+import ServiceProductCard from "@/components/cards/service-product-card";
 
 const { width } = Dimensions.get("window");
 const cardWidth = (width - 60) / 2;
@@ -26,7 +34,7 @@ type Service = {
 
 const servicesData: Service[] = [
   {
-    id: "1",  // Changed from serviceId to id
+    id: "1", // Changed from serviceId to id
     name: "Spacex Center",
     category: "Lugares",
     description: "A cool place for events",
@@ -35,7 +43,7 @@ const servicesData: Service[] = [
     image: null,
   },
   {
-    id: "2",  // Changed from serviceId to id
+    id: "2", // Changed from serviceId to id
     name: "Soho Venue",
     category: "Lugares",
     description: "An amazing venue",
@@ -44,7 +52,7 @@ const servicesData: Service[] = [
     image: null,
   },
   {
-    id: "3",  // Changed from serviceId to id
+    id: "3", // Changed from serviceId to id
     name: "Gourmet Bistro",
     category: "Comidas",
     description: "A fine dining experience",
@@ -53,7 +61,7 @@ const servicesData: Service[] = [
     image: null,
   },
   {
-    id: "4",  // Changed from serviceId to id
+    id: "4", // Changed from serviceId to id
     name: "Jazz Band",
     category: "Otros",
     description: "Live music performance",
@@ -68,7 +76,13 @@ const Services = () => {
   const [category, setCategory] = useState<Category>("Lugares");
   const [selectedService, setSelectedService] = useState<Service | null>(null);
   const router = useRouter();
-
+  
+  const handlePress = (id: string, category :string) => {
+    console.log("Servicio seleccionado:", id, " categoria: ", category);
+    
+      router.push(`/products?id=${id}&category=${category}`);
+    
+  };
   const filteredServices = servicesData.filter(
     (service) =>
       service.category === category &&
@@ -90,35 +104,35 @@ const Services = () => {
           <MaterialIcons name="search" size={28} color="black" />
         </Pressable>
       </View>
-
       {/* Categories */}
       <View style={styles.categories}>
         {(["Lugares", "Comidas", "Otros"] as Category[]).map((cat) => (
           <Pressable
             key={cat}
             onPress={() => setCategory(cat)}
-            style={[styles.categoryButton, category === cat && styles.categoryButtonActive]}
+            style={[
+              styles.categoryButton,
+              category === cat && styles.categoryButtonActive,
+            ]}
           >
             <MaterialIcons name={icons[cat]} size={30} color="white" />
             <Text style={styles.categoryText}>{cat}</Text>
           </Pressable>
         ))}
       </View>
-
       {/* Service Cards */}
       <FlatList
         data={filteredServices}
         keyExtractor={(item) => item.id}
         numColumns={2}
-        contentContainerStyle={{
-          paddingBottom: 100,
-          paddingHorizontal: 10,
-        }}
-        columnWrapperStyle={{
-          justifyContent: "space-between",
-        }}
+        contentContainerStyle={{ paddingBottom: 100, paddingHorizontal: 10 }}
+        columnWrapperStyle={{ justifyContent: "space-between" }}
         renderItem={({ item }) => (
-          <ServiceProductCard item={item} isService={true} />
+          <ServiceProductCard
+            item={item}
+            isService={true}
+            onPress={() => handlePress(item.id,item.category)}
+          />
         )}
       />
     </View>
@@ -133,7 +147,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderRadius: 25,
     paddingHorizontal: 20,
-    height: 50,
+    height: 40,
     elevation: 5,
     marginBottom: 20,
   },
