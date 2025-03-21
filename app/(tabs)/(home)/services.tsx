@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, FlatList, Pressable, StyleSheet, Dimensions } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router"; // Import the router
 import ServiceProductCard from "@/components/cards/ServiceProductCard";
+import { getServices } from "@/services/services.service";
 
 const { width } = Dimensions.get("window");
 const cardWidth = (width - 60) / 2;
@@ -24,50 +25,35 @@ type Service = {
   image: string | null;
 };
 
-const servicesData: Service[] = [
-  {
-    id: "1",  // Changed from serviceId to id
-    name: "Spacex Center",
-    category: "Lugares",
-    description: "A cool place for events",
-    address: "Somewhere",
-    lowestPrice: 5000,
-    image: null,
-  },
-  {
-    id: "2",  // Changed from serviceId to id
-    name: "Soho Venue",
-    category: "Lugares",
-    description: "An amazing venue",
-    address: "Somewhere else",
-    lowestPrice: 10000,
-    image: null,
-  },
-  {
-    id: "3",  // Changed from serviceId to id
-    name: "Gourmet Bistro",
-    category: "Comidas",
-    description: "A fine dining experience",
-    address: "Foodie street",
-    lowestPrice: 5000,
-    image: null,
-  },
-  {
-    id: "4",  // Changed from serviceId to id
-    name: "Jazz Band",
-    category: "Otros",
-    description: "Live music performance",
-    address: "Music venue",
-    lowestPrice: 10000,
-    image: null,
-  },
-];
-
 const Services = () => {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState<Category>("Lugares");
-  const [selectedService, setSelectedService] = useState<Service | null>(null);
-  const router = useRouter();
+  const [servicesData, setServicesData] = useState<Service[]>([]);
+
+  // Fetch services data from the API when the component mounts
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const response = await getServices();
+        if (response) {
+          // Map the API response to match the `Service` type
+          const mappedServices = response.map((service: any) => ({
+            id: service.id.toString()?service.id.toString():"Service Id", // Ensure id is a string
+            name: service.Nombre?service.Nombre:"Service Name",
+            category: service.tipoServicio === "Lugares" ? "Lugares" : service.tipoServicio === "Comidas" ? "Comidas" : "Otros",
+            description: service.descripcion || "No description available", // Using the first item for description temporarily
+            address: service.ubicacion?service.ubicacion:"Service Address",
+            image: service.imagen || null,
+          }));
+          setServicesData(mappedServices);
+        }
+      } catch (error) {
+        console.error("Error fetching services:", error);
+      }
+    };
+
+    fetchServices();
+  }, []); // Empty dependency array to run once when the component mounts
 
   const filteredServices = servicesData.filter(
     (service) =>
