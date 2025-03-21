@@ -28,6 +28,12 @@ const HomeLayout = () => {
           headerTitle: () => <ThemedText>Servicios</ThemedText>,
         }}
       />
+       <Stack.Screen
+        name="products"
+        options={{
+          headerTitle: () => <ThemedText>Productos</ThemedText>,
+        }}
+      />
     </Stack>
   );
 };

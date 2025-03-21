@@ -12,9 +12,10 @@ import { fetchEventData } from "@/services/client-events.service";
 import { EventCardProps } from "@/interfaces/event-card.interface";
 import { Colors } from "@/constants/Colors";
 import { useStores } from "@/context/root-store-provider";
+import { useRouter } from "expo-router";
+
 import { getFirstWord } from "@/utils/text.utils";
 import { observer } from "mobx-react-lite";
-import { useRouter } from "expo-router";
 
 
 const Home = observer(() => {
