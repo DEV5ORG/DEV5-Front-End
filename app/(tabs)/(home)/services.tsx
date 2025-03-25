@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -9,7 +9,7 @@ import {
   Dimensions,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
-import { useRouter } from "expo-router"; // Import the router
+import { useRouter, useLocalSearchParams } from "expo-router"; // Import the router
 import ServiceProductCard from "@/components/cards/service-product-card";
 
 const { width } = Dimensions.get("window");
@@ -76,7 +76,12 @@ const Services = () => {
   const [category, setCategory] = useState<Category>("Lugares");
   const [selectedService, setSelectedService] = useState<Service | null>(null);
   const router = useRouter();
-  
+  const {categorySelected } = useLocalSearchParams();
+  useEffect(() => {
+    if (categorySelected) {
+      setCategory(categorySelected as Category);
+    }
+  }, [categorySelected]);
   const handlePress = (id: string, category :string) => {
     console.log("Servicio seleccionado:", id, " categoria: ", category);
     

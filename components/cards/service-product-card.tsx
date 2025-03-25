@@ -10,7 +10,7 @@ type CardProps = {
     description?: string;
     image: string | null;
     category?: string; // 'Lugares', 'Comidas', etc.
-    price?: number
+    price?: number;
   };
   category?: string;
   isService?: boolean;
@@ -24,7 +24,7 @@ const ServiceProductCard = ({
 }: CardProps & { onPress: (id: string, quantity?: number) => void }) => {
   const [quantity, setQuantity] = useState(1);
 
-  return ( 
+  return (
     <View style={[styles.card, !isService && styles.foodCard]}>
       {item.image ? (
         <Image source={{ uri: item.image }} style={styles.image} />
@@ -33,20 +33,18 @@ const ServiceProductCard = ({
           <MaterialIcons name="image" size={40} color="#ccc" />
         </View>
       )}
-  
+
       <View style={styles.content}>
         <Text style={styles.name}>{item.name}</Text>
-  
+
         {/* Mostrar el precio solo si NO es un servicio */}
-        {!isService && (
-          <Text style={styles.cardPrice}>₡{item.price}</Text>
-        )}
-  
+        {!isService && <Text style={styles.cardPrice}>₡{item.price}</Text>}
+
         {isService && item.address && (
           <Text style={styles.location}>{item.address}</Text>
         )}
         <Text style={styles.description}>{item.description}</Text>
-  
+
         {!isService && category === "Comidas" ? (
           <View style={styles.foodActions}>
             <View style={styles.quantityContainer}>
@@ -64,7 +62,7 @@ const ServiceProductCard = ({
                 <Text>+</Text>
               </Pressable>
             </View>
-  
+
             <Pressable
               style={styles.button}
               onPress={() => onPress(item.id, quantity)}
@@ -74,18 +72,24 @@ const ServiceProductCard = ({
           </View>
         ) : (
           <Pressable
-            style={[styles.button, category !== "Comidas" && styles.fixedButton]}
+            style={[
+              styles.button,
+              category !== "Comidas" && styles.fixedButton,
+            ]}
             onPress={() => onPress(item.id)}
           >
             <Text style={styles.buttonText}>
-              {isService ? "Ver Productos" : "Agregar"}
+              {!isService && category === "Lugares"
+                ? "Seleccionar"
+                : isService
+                ? "Ver Productos"
+                : "Agregar"}
             </Text>
           </Pressable>
         )}
       </View>
     </View>
   );
-  
 };
 
 const styles = StyleSheet.create({
@@ -117,7 +121,7 @@ const styles = StyleSheet.create({
     padding: 10,
     flex: 1,
     justifyContent: "space-between",
-    alignItems: "center"
+    alignItems: "center",
   },
   name: {
     fontSize: 18,
@@ -164,7 +168,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginTop: "auto", 
+    marginTop: "auto",
     width: "100%",
   },
   button: {
