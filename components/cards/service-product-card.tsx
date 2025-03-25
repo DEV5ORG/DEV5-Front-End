@@ -37,7 +37,7 @@ const ServiceProductCard = ({
       <View style={styles.content}>
         <Text style={styles.name}>{item.name}</Text>
   
-        {/* 🔹 Mostrar el precio solo si NO es un servicio */}
+        {/* Mostrar el precio solo si NO es un servicio */}
         {!isService && (
           <Text style={styles.cardPrice}>₡{item.price}</Text>
         )}
