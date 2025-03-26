@@ -11,7 +11,7 @@ import { useRouter, useLocalSearchParams } from "expo-router";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { Colors } from "@/constants/Colors";
 
-const EventScreen = () => {
+const SelectEventDate = () => {
   const router = useRouter();
   const { id, category } = useLocalSearchParams();
 
@@ -181,4 +181,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EventScreen;
+export default SelectEventDate;
