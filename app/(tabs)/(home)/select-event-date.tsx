@@ -8,7 +8,7 @@ import {
   Pressable,
 } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
-import DateTimePickerModal from "react-native-modal-datetime-picker";
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { Colors } from "@/constants/Colors";
 
 const SelectEventDate = () => {
@@ -109,6 +109,7 @@ const SelectEventDate = () => {
         locale={pickerMode === "date" ? "es_ES" : undefined}
         confirmTextIOS="Confirmar"
         cancelTextIOS="Cancelar"
+        
       />
 
       {/* Botones de navegación */}

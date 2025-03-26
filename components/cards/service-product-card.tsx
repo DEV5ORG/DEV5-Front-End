@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 10,
     marginBottom: 20,
-    elevation: 5,
+    elevation: 5,// Andoid 
     width: "48%",
     overflow: "hidden",
     alignItems: "center",

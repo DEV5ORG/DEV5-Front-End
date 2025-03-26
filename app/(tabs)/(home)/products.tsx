@@ -56,7 +56,7 @@ const Products = () => {
   const handlePress = (id: string, quantity?: number) => {
     console.log(categoryString)
     if (categoryString === "Lugares") {
-      router.push(`/(tabs)/(home)/[id]?id=${id}`);
+      router.push(`/select-event-date?id=${id}`);
     } else {
       toastStore.addToast("Agregado al carrito");
       console.log("agregar al carrito, ", quantity);

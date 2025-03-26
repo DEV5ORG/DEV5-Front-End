@@ -35,7 +35,7 @@ const HomeLayout = () => {
         }}
       />
          <Stack.Screen
-        name="[id]"
+        name="select-event-date"
         options={{
           headerTitle: () => <ThemedText>Productos</ThemedText>,
         }}
