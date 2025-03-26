@@ -40,8 +40,8 @@ const EventScreen = () => {
     setPickerTarget(target);
     setDatePickerVisibility(true);
   };
-  // Función para formatear la hora a formato de 12 horas (AM/PM)
-  const formatTime = (time: Date) => {
+ // Función para formatear la hora a formato de 12 horas (AM/PM)
+ const formatTime = (time: Date) => {
     return time.toLocaleTimeString([], {
       hour: "2-digit",
       minute: "2-digit",
@@ -106,7 +106,9 @@ const EventScreen = () => {
         minimumDate={pickerTarget === "date" ? new Date() : undefined}
         onConfirm={handleDateChange}
         onCancel={() => setDatePickerVisibility(false)}
-        locale="es_ES"
+        locale={pickerMode === "date" ? "es_ES" : undefined}
+        confirmTextIOS="Confirmar"
+        cancelTextIOS="Cancelar"
       />
 
       {/* Botones de navegación */}

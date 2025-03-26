@@ -163,14 +163,14 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   categoryButton: {
-    backgroundColor: "#8fa7d6",
+    backgroundColor: "#90B1BC",
     padding: 10,
     borderRadius: 10,
     alignItems: "center",
     width: 80,
     elevation: 3,
   },
-  categoryButtonActive: { backgroundColor: "#3b5ba9" },
+  categoryButtonActive: { backgroundColor: "#3F9FC0" },
   categoryText: { color: "white", fontSize: 14, marginTop: 5 },
 });
 
