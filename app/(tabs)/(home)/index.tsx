@@ -11,17 +11,19 @@ import EventCard from "@/components/cards/event-card";
 import { fetchEventData } from "@/services/client-events.service";
 import { EventCardProps } from "@/interfaces/event-card.interface";
 import { Colors } from "@/constants/Colors";
-import { useNavigation } from "@react-navigation/native";
 import { useStores } from "@/context/root-store-provider";
+import { useRouter } from "expo-router";
+
 import { getFirstWord } from "@/utils/text.utils";
 import { observer } from "mobx-react-lite";
+
 
 const Home = observer(() => {
   const [events, setEvents] = useState<EventCardProps[]>([]);
   const [loading, setLoading] = useState(true);
   const { authStore } = useStores();
   const { user } = authStore;
-  useNavigation();
+  const router = useRouter();
   useEffect(() => {
     const loadEvents = async () => {
       try {
@@ -42,14 +44,14 @@ const Home = observer(() => {
 
   const handleEventEdit = (eventTitle: string) => {
     // Here you would handle the edit action
-    console.log(`Editing event: ${eventTitle}`);
-    // navigation.navigate('EditEvent', { eventTitle });
+  
+    
   };
 
   const handleNewEvent = () => {
     // Here you would navigate to the create event screen
-    console.log("Navigate to new event creation screen");
-    // navigation.navigate('CreateEvent');
+    router.push("/(tabs)/(home)/services");
+
   };
 
   const renderEventCard = (event: EventCardProps, index: number) => (
