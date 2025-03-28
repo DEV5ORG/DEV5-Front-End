@@ -5,9 +5,6 @@ import { getServices } from "@/services/services.service";
 import ServiceProductCard from "@/components/cards/service-product-card";
 import { useRouter } from "expo-router";
 
-const { width } = Dimensions.get("window");
-const cardWidth = (width - 60) / 2;
-
 type Category = "Lugares" | "Comidas" | "Otros";
 const icons: Record<Category, keyof typeof MaterialIcons.glyphMap> = {
   Lugares: "location-city",
@@ -39,10 +36,10 @@ const Services = () => {
           // Map the API response to match the `Service` type
           const mappedServices = response.map((service: any) => ({
             id: service?.id?.toString()?service.id.toString():null, // Ensure id is a string or null
-            name: service?.Nombre?service.Nombre:"Service Name",
+            name: service?.Nombre?service.Nombre:"Sin nombre asignado",
             category: service?.tipoServicio === "Lugares" ? "Lugares" : service.tipoServicio === "Comidas" ? "Comidas" : "Otros",
-            description: service?.descripcion || "No description available", // Using the first item for description temporarily
-            address: service?.ubicacion?service.ubicacion:"Service Address",
+            description: service?.descripcion || "Sin descripción", // Using the first item for description temporarily
+            address: service?.ubicacion?service.ubicacion:"Sin ubicación",
             image: service?.imagen || null,
           }));
           setServicesData(mappedServices);
