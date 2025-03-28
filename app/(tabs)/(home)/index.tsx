@@ -17,7 +17,7 @@ import { getFirstWord } from "@/utils/text.utils";
 import { observer } from "mobx-react-lite";
 
 const Home = observer(() => {
-  const [events, setEvents] = useState<EventCardProps[]>([]);
+  const [events, setEvents] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const { authStore } = useStores();
   let user!: any; // Assumes user contains an `id` field
