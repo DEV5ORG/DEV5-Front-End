@@ -8,26 +8,45 @@ import {
 } from "react-native";
 import { ThemedText } from "@/components/themed-text";
 import EventCard from "@/components/cards/event-card";
-import { fetchEventData } from "@/services/client-events.service";
-import { EventCardProps } from "@/interfaces/event-card.interface";
+import { getEventsForUser, getAllEvents } from "@/services/events.service"; // ✅ Updated import
+/* import { EventCardProps } from "@/interfaces/event-card.interface"; */
 import { Colors } from "@/constants/Colors";
 import { useNavigation } from "@react-navigation/native";
 import { useStores } from "@/context/root-store-provider";
 
 const Home = () => {
-  const [events, setEvents] = useState<EventCardProps[]>([]);
+  const [events, setEvents] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const { authStore } = useStores();
-  const { user } = authStore;
+  let user!: any; // Assumes user contains an `id` field
   useNavigation();
+
   useEffect(() => {
     const loadEvents = async () => {
+      setLoading(true); // Start loading while fetching data
+
       try {
-        const fetchedEvents = await fetchEventData();
-        const mappedEvents = fetchedEvents.map((event) => ({
+        let fetchedEvents;
+        if (user?.id) {
+          fetchedEvents = await getEventsForUser(user.id); // Fetch events for user if ID is present
+        } else {
+          fetchedEvents = await getAllEvents(); // Fetch all events if user ID is missing
+        }
+
+        console.log(fetchedEvents)
+
+        const mappedEvents = fetchedEvents.map((event: any) => ({
           ...event,
-          onEdit: () => handleEventEdit(event.title),
+          image: event.imagen,
+          title: event.nombreEvento,
+          date: event.fechaHoraInicio,
+          location: event.ubicacion,
+          totalPrice: event.presupuestoFinal,
+          isEditable: event.editable,
+          // You can add more properties here if necessary
+          onEdit: () => handleEventEdit(event.nombreEvento),
         }));
+
         setEvents(mappedEvents);
       } catch (error) {
         console.error("Failed to fetch events:", error);
@@ -35,34 +54,34 @@ const Home = () => {
         setLoading(false);
       }
     };
+
     loadEvents();
-  }, []);
+  }, [user?.id]); // Only run when `user?.id` changes
 
   const handleEventEdit = (eventTitle: string) => {
-    // Here you would handle the edit action
     console.log(`Editing event: ${eventTitle}`);
     // navigation.navigate('EditEvent', { eventTitle });
   };
 
   const handleNewEvent = () => {
-    // Here you would navigate to the create event screen
     console.log("Navigate to new event creation screen");
     // navigation.navigate('CreateEvent');
   };
 
-  const renderEventCard = (event: EventCardProps, index: number) => (
+  const renderEventCard = (event: any, index: number) => (
+
     <EventCard
       key={index}
-      image={event.image}
+      imagen={event.imagen}
       title={event.title}
       date={event.date}
       location={event.location}
       onEdit={() => handleEventEdit(event.title)}
       isEditable={event.isEditable}
       totalPrice={event.totalPrice}
-      food={event.food}
-      place={event.place}
-      entertainment={event.entertainment}
+      food={event.ordenes} // If needed, map this too from the fetched data
+      place={event.ordenes} // If needed, map this too from the fetched data
+      entertainment={event.ordenes} // If needed, map this too from the fetched data
     />
   );
 
@@ -73,15 +92,9 @@ const Home = () => {
     >
       <View style={styles.header}>
         <View style={styles.titleContainer}>
-          {/* Aqui se va a usar el nombre, de momento el token solo devuelve el email.
-          Este comentario es un recordatorio para actualizar cuando los 
-          cambios en el BE estén listos. */}
           <ThemedText type="title">Hola {user?.email}</ThemedText>
         </View>
-        <TouchableOpacity
-          style={styles.newEventButton}
-          onPress={handleNewEvent}
-        >
+        <TouchableOpacity style={styles.newEventButton} onPress={handleNewEvent}>
           <ThemedText style={styles.buttonText}>Nuevo Evento</ThemedText>
         </TouchableOpacity>
       </View>

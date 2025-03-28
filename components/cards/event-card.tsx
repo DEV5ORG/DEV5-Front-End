@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { EventCardProps } from "@/interfaces/event-card.interface";
+/* import { EventCardProps } from "@/interfaces/event-card.interface"; */
 import { Colors } from "@/constants/Colors";
 
-const EventCard: React.FC<EventCardProps> = ({
-  image,
+const EventCard: React.FC<any> = ({
+  imagen,
   title,
   date,
   location,
@@ -41,16 +41,16 @@ const EventCard: React.FC<EventCardProps> = ({
 
   return (
     <View style={[styles.card, expanded && styles.expandedCard]}>
-      <Image source={{ uri: image }} style={styles.image} />
+      <Image source={{ uri: imagen }} style={styles.image} />
       <View style={styles.content}>
-        <Text style={styles.title}>{title}</Text>
+        <Text style={styles.title}>{title?title:""}</Text>
         <View style={styles.infoRow}>
           <Ionicons name="calendar" size={16} color={Colors.icon} />
-          <Text style={styles.infoText}>{date}</Text>
+          <Text style={styles.infoText}>{date?date:""}</Text>
         </View>
         <View style={styles.infoRow}>
           <Ionicons name="location" size={16} color={Colors.icon} />
-          <Text style={styles.infoText}>{location}</Text>
+          <Text style={styles.infoText}>{location?location:""}</Text>
         </View>
 
         {isEditable && (
@@ -68,12 +68,12 @@ const EventCard: React.FC<EventCardProps> = ({
           <View style={styles.expandedContent}>
             <View style={styles.totalPriceContainer}>
               <Text style={styles.totalPriceLabel}>Precio Total:</Text>
-              <Text style={styles.totalPriceValue}>{totalPrice}</Text>
+              <Text style={styles.totalPriceValue}>{totalPrice?totalPrice:null}</Text>
             </View>
 
-            {renderSection("Lugar", place)}
-            {renderSection("Comida", food)}
-            {renderSection("Entretenimiento", entertainment)}
+            {renderSection("Lugar", place?place:null)}
+            {renderSection("Comida", food?food:null)}
+            {renderSection("Entretenimiento", entertainment?entertainment:null)}
 
             <TouchableOpacity style={styles.editButton} onPress={onEdit}>
               <Text style={styles.editButtonText}>Editar Evento</Text>

@@ -1,4 +1,4 @@
-// interfaces/event-card.interface.tsx
+/* // interfaces/event-card.interface.tsx
 
 export interface FoodService {
   image: string;
@@ -44,7 +44,7 @@ export interface Entertainment {
 }
 
 export interface EventCardProps {
-  image: string;
+  imagen: string;
   title: string;
   date: string;
   location: string;
@@ -55,3 +55,4 @@ export interface EventCardProps {
   place: Place;
   entertainment: Entertainment;
 }
+ */
