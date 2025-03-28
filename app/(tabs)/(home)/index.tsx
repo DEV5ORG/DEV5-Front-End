@@ -17,6 +17,7 @@ import { useRouter } from "expo-router";
 import { getFirstWord } from "@/utils/text.utils";
 import { observer } from "mobx-react-lite";
 
+
 const Home = observer(() => {
   const [events, setEvents] = useState<EventCardProps[]>([]);
   const [loading, setLoading] = useState(true);
