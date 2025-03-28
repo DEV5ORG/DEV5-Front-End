@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { ThemedText } from "@/components/themed-text";
 import EventCard from "@/components/cards/event-card";
-import { getEventsForUser, getAllEvents } from "@/services/events.service"; // ✅ Updated import
+import { getEventsForUser } from "@/services/events.service"; // ✅ Updated import
 /* import { EventCardProps } from "@/interfaces/event-card.interface"; */
 import { Colors } from "@/constants/Colors";
 import { useNavigation } from "@react-navigation/native";
@@ -20,7 +20,7 @@ const Home = observer(() => {
   const [events, setEvents] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const { authStore } = useStores();
-  let user!: any; // Assumes user contains an `id` field
+  let user: any = authStore.user; // Assumes user contains an `id` field
   useNavigation();
 
   useEffect(() => {
@@ -29,12 +29,8 @@ const Home = observer(() => {
 
       try {
         let fetchedEvents;
-        if (user?.id) {
           fetchedEvents = await getEventsForUser(user.id); // Fetch events for user if ID is present
-        } else {
-          fetchedEvents = await getAllEvents(); // Fetch all events if user ID is missing
-        }
-
+        
         console.log(fetchedEvents)
 
         const mappedEvents = fetchedEvents.map((event: any) => ({

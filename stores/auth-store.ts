@@ -49,10 +49,10 @@ export class AuthStore {
 
   async storeSignInData(token: string) {
     try {
-      const { sub: email, nombre, role } = jwtDecode<IJwtDecodedData>(token);
+      const { sub: email, nombre, role, id } = jwtDecode<IJwtDecodedData>(token);
       await SecureStore.setItemAsync(STORE_TOKEN_ITEM_NAME, token);
       this.setToken(token);
-      this.setUser({ name: nombre, email: email ?? "", role });
+      this.setUser({ name: nombre, email: email ?? "", role, id });
     } catch (error) {
       console.error(error);
     }
@@ -68,9 +68,9 @@ export class AuthStore {
     try {
       const token = await SecureStore.getItemAsync(STORE_TOKEN_ITEM_NAME);
       if (token && !this.isTokenExpired(token)) {
-        const { sub: email, nombre, role } = jwtDecode<IJwtDecodedData>(token);
+        const { sub: email, nombre, role, id } = jwtDecode<IJwtDecodedData>(token);
         this.setToken(token);
-        this.setUser({ name: nombre, email: email ?? "", role });
+        this.setUser({ name: nombre, email: email ?? "", role, id });
       } else {
         await SecureStore.deleteItemAsync(STORE_TOKEN_ITEM_NAME);
         this.setToken(null);
