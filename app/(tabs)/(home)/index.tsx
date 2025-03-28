@@ -13,9 +13,11 @@ import { getEventsForUser, getAllEvents } from "@/services/events.service"; // â
 import { Colors } from "@/constants/Colors";
 import { useNavigation } from "@react-navigation/native";
 import { useStores } from "@/context/root-store-provider";
+import { getFirstWord } from "@/utils/text.utils";
+import { observer } from "mobx-react-lite";
 
-const Home = () => {
-  const [events, setEvents] = useState<any[]>([]);
+const Home = observer(() => {
+  const [events, setEvents] = useState<EventCardProps[]>([]);
   const [loading, setLoading] = useState(true);
   const { authStore } = useStores();
   let user!: any; // Assumes user contains an `id` field
@@ -92,7 +94,9 @@ const Home = () => {
     >
       <View style={styles.header}>
         <View style={styles.titleContainer}>
-          <ThemedText type="title">Hola {user?.email}</ThemedText>
+          <ThemedText type="title">
+            Hola {getFirstWord(user?.name ?? "")}
+          </ThemedText>
         </View>
         <TouchableOpacity style={styles.newEventButton} onPress={handleNewEvent}>
           <ThemedText style={styles.buttonText}>Nuevo Evento</ThemedText>
@@ -108,7 +112,7 @@ const Home = () => {
       )}
     </ScrollView>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {
