@@ -93,6 +93,7 @@ const Products = () => {
           data={items}
           keyExtractor={(item) => item.id}
           numColumns={2}
+          showsVerticalScrollIndicator={false} // Oculta la barra de scroll
           contentContainerStyle={{ paddingBottom: 25, paddingHorizontal: 10 }}
           columnWrapperStyle={{ justifyContent: "space-between" }}
           renderItem={({ item }) => (
@@ -109,7 +110,12 @@ const Products = () => {
   );
 };
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, backgroundColor: "#f5f5f5" },
+  container: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: "#f5f5f5",
+    overflow: "hidden",
+  },
   searchBar: {
     flexDirection: "row",
     alignItems: "center",
