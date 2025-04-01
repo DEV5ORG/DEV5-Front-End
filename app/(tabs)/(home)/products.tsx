@@ -35,7 +35,7 @@ const Products = () => {
 
       try {
         const fetchedService = await fetchServiceById(idString);
-        console.log(fetchedService)
+        console.log(fetchedService);
         setItems(fetchedService?.items ?? []);
       } catch (err) {
         toastStore.addToast("Ocurrió un error, inténtelo de nuevo", "error");
@@ -48,7 +48,7 @@ const Products = () => {
     loadService();
   }, [idString]);
 
- /*  const filteredItems: Product[] = items.filter((item: Product) =>
+  /*  const filteredItems: Product[] = items.filter((item: Product) =>
     item.nombre.toLowerCase().includes(search.toLowerCase())
   ); */
 
@@ -94,7 +94,7 @@ const Products = () => {
           data={items}
           keyExtractor={(item) => item.id}
           numColumns={2}
-          contentContainerStyle={{ paddingBottom: 100, paddingHorizontal: 10 }}
+          contentContainerStyle={{ paddingBottom: 25, paddingHorizontal: 10 }}
           columnWrapperStyle={{ justifyContent: "space-between" }}
           renderItem={({ item }) => (
             <ServiceProductCard
