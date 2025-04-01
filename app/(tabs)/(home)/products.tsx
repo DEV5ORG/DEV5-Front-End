@@ -35,7 +35,6 @@ const Products = () => {
 
       try {
         const fetchedService = await fetchServiceById(idString);
-        console.log(fetchedService);
         setItems(fetchedService?.items ?? []);
       } catch (err) {
         toastStore.addToast("Ocurrió un error, inténtelo de nuevo", "error");

@@ -7,11 +7,13 @@ import {
   Pressable,
   StyleSheet,
   Dimensions,
+  ActivityIndicator,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import ServiceProductCard from "@/components/cards/service-product-card";
 import { getServices } from "@/services/services.service";
+import { Service } from "@/interfaces/service-product.interface";
 
 const { width } = Dimensions.get("window");
 const cardWidth = (width - 60) / 2;
@@ -23,21 +25,12 @@ const icons: Record<Category, keyof typeof MaterialIcons.glyphMap> = {
   Otros: "casino",
 };
 
-type Service = {
-  id: string;
-  name: string;
-  category: Category;
-  description: string;
-  address: string;
-  lowestPrice?: number | null;
-  image: string | null;
-};
-
 const Services = () => {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState<Category>("Lugares");
   const [servicesData, setServicesData] = useState<Service[]>([]);
   const { categorySelected } = useLocalSearchParams();
+  const [loading, setLoading] = useState(true); // Estado para el loader
   const router = useRouter();
 
   useEffect(() => {
@@ -46,42 +39,29 @@ const Services = () => {
     }
     const fetchServices = async () => {
       try {
+        setLoading(true); // Mostrar el loader antes de cargar
         const response = await getServices();
         if (response) {
-          // Map the API response to match the `Service` type
-          const mappedServices = response.map((service: any) => ({
-            id: service?.id?.toString() ? service.id.toString() : null, // Ensure id is a string or null
-            name: service?.Nombre ? service.Nombre : "Sin nombre asignado",
-            category:
-              service?.tipoServicio === "Lugares"
-                ? "Lugares"
-                : service.tipoServicio === "Comidas"
-                ? "Comidas"
-                : "Otros",
-            description: service?.descripcion || "Sin descripción", // Using the first item for description temporarily
-            address: service?.ubicacion ? service.ubicacion : "Sin ubicación",
-            image: service?.imagen || null,
-          }));
-          setServicesData(mappedServices);
+          setServicesData(response);
         }
       } catch (error) {
         console.error("Error fetching services:", error);
+      } finally {
+        setLoading(false); // Ocultar el loader cuando termine la carga
       }
     };
-
     fetchServices();
   }, [categorySelected]); // Empty dependency array to run once when the component mounts
 
-  const handlePress = (id: string, category :string) => {
+  const handlePress = (id: string, category: string) => {
     console.log("Servicio seleccionado:", id, " categoria: ", category);
-    
-      router.push(`/products?id=${id}&category=${category}`);
-    
+
+    router.push(`/products?id=${id}&category=${category}`);
   };
   const filteredServices = servicesData.filter(
     (service) =>
-      service.category === category &&
-      service.name.toLowerCase().includes(search.toLowerCase())
+      service.tipoServicio === category &&
+      service.nombre.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -118,31 +98,49 @@ const Services = () => {
       </View>
 
       {/* Service Cards */}
-      <FlatList
-        data={filteredServices}
-        keyExtractor={(item) => item.id}
-        numColumns={2}
-        contentContainerStyle={{
-          paddingBottom: 100,
-          paddingHorizontal: 10,
-        }}
-        columnWrapperStyle={{
-          justifyContent: "space-between",
-        }}
-        renderItem={({ item }) => (
-          <ServiceProductCard
-            item={item}
-            isService={true}
-            onPress={() => handlePress(item.id,item.category)}
-          />
-        )}
-      />
+      {loading ? (
+        <View style={styles.loaderContainer}>
+          <ActivityIndicator size="large" color="#90B1BC" />
+        </View>
+      ) : filteredServices.length === 0 ? (
+        <View style={styles.noItemsContainer}>
+          <Text style={styles.noItemsText}>
+            No hay servicios disponibles en esta categoría.
+          </Text>
+        </View>
+      ) : (
+        <FlatList
+          data={filteredServices}
+          keyExtractor={(item) => item.id}
+          numColumns={2}
+          showsVerticalScrollIndicator={false} // Oculta la barra de scroll
+          contentContainerStyle={{
+            paddingBottom: 25,
+            paddingHorizontal: 10,
+          }}
+          columnWrapperStyle={{
+            justifyContent: "space-between",
+          }}
+          renderItem={({ item }) => (
+            <ServiceProductCard
+              item={item}
+              isService={true}
+              onPress={() => handlePress(item.id, item.tipoServicio)}
+            />
+          )}
+        />
+      )}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, backgroundColor: "#f5f5f5" },
+  container: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: "#f5f5f5",
+    overflow: "hidden",
+  },
   searchBar: {
     flexDirection: "row",
     alignItems: "center",
@@ -169,6 +167,23 @@ const styles = StyleSheet.create({
   },
   categoryButtonActive: { backgroundColor: "#3F9FC0" },
   categoryText: { color: "white", fontSize: 14, marginTop: 5 },
+  loaderContainer: {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+  },
+  noItemsContainer: {
+    position: "absolute",
+    top: "50%",
+    left: "10%",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  noItemsText: {
+    fontSize: 18,
+    color: "#666",
+    textAlign: "center",
+  },
 });
 
 export default Services;
