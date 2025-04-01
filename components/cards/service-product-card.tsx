@@ -1,33 +1,20 @@
 import React, { useState } from "react";
 import { View, Text, Image, Pressable, StyleSheet } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
+import { CardProps } from "@/interfaces/service-product.interface";
 
-type CardProps = {
-  item: {
-    id: string;
-    name: string;
-    address?: string;
-    description?: string;
-    image: string | null;
-    category?: string; // 'Lugares', 'Comidas', etc.
-    price?: number;
-  };
-  category?: string;
-  isService?: boolean;
-};
-
-const ServiceProductCard = ({
+const ServiceProductCard: React.FC<CardProps> = ({
   category,
   item,
   isService,
   onPress,
-}: CardProps & { onPress: (id: string, quantity?: number) => void }) => {
+}) => {
   const [quantity, setQuantity] = useState(1);
 
   return (
     <View style={[styles.card, !isService && styles.foodCard]}>
-      {item.image ? (
-        <Image source={{ uri: item.image }} style={styles.image} />
+      {item.imagen ? (
+        <Image source={{ uri: item.imagen }} style={styles.image} />
       ) : (
         <View style={styles.imagePlaceholder}>
           <MaterialIcons name="image" size={40} color="#ccc" />
@@ -35,15 +22,18 @@ const ServiceProductCard = ({
       )}
 
       <View style={styles.content}>
-        <Text style={styles.name}>{item.name}</Text>
+        <Text style={styles.name}>{item.nombre}</Text>
 
-        {/* Mostrar el precio solo si NO es un servicio */}
-        {!isService && <Text style={styles.cardPrice}>₡{item.price}</Text>}
-
-        {isService && item.address && (
-          <Text style={styles.location}>{item.address}</Text>
+        {/* Mostrar precio solo si NO es un servicio */}
+        {!isService && "precio" in item && (
+          <Text style={styles.cardPrice}>₡{item.precio}</Text>
         )}
-        <Text style={styles.description}>{item.description}</Text>
+
+        {isService && item.ubicacion && (
+          <Text style={styles.location}>{item.ubicacion}</Text>
+        )}
+
+        <Text style={styles.description}>{item.descripcion}</Text>
 
         {!isService && category === "Comidas" ? (
           <View style={styles.foodActions}>
@@ -97,7 +87,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 10,
     marginBottom: 20,
-    elevation: 5,// Andoid 
+    elevation: 5, // Andoid
     width: "48%",
     overflow: "hidden",
     alignItems: "center",
