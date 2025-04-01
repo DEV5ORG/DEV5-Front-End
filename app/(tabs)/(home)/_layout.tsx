@@ -34,6 +34,12 @@ const HomeLayout = () => {
           headerTitle: () => <ThemedText>Productos</ThemedText>,
         }}
       />
+         <Stack.Screen
+        name="select-event-date"
+        options={{
+          headerTitle: () => <ThemedText>Productos</ThemedText>,
+        }}
+      />
     </Stack>
   );
 };

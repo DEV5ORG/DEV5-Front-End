@@ -10,53 +10,54 @@ import {
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import ServiceProductCard from "@/components/cards/service-product-card";
-import {
-  fetchProductsByService,
-  searchProducts,
-} from "@/services/product-service";
+import { fetchServiceById, searchProducts } from "@/services/product-service";
 import { useStores } from "@/context/root-store-provider";
 
 import { useRouter, useLocalSearchParams } from "expo-router";
+import { Product } from "@/interfaces/service-product.interface";
 
 const Products = () => {
   const router = useRouter();
   const { id, category } = useLocalSearchParams();
   const { toastStore } = useStores();
   const [search, setSearch] = useState("");
+  const [items, setItems] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   // asegurar  que id y category sean strings
   const idString = Array.isArray(id) ? id[0] : id;
   const categoryString = Array.isArray(category) ? category[0] : category;
 
-  const foodItems = [
-    {
-      id: "1",
-      name: "Paquete Pizza",
-      price: 5000,
-      image: "https://media.istockphoto.com/id/1442417585/es/foto/persona-recibiendo-un-pedazo-de-pizza-de-pepperoni-con-queso.jpg?s=2048x2048&w=is&k=20&c=Cv5aMhENoBJ1qNN22LT5oisAPzpyvidx4WfvFggbRmo=",
-    },
-    {
-      id: "2",
-      name: "Pizza Peperoni Grande",
-      price: 10000,
-      image: "https://media.istockphoto.com/id/1442417585/es/foto/persona-recibiendo-un-pedazo-de-pizza-de-pepperoni-con-queso.jpg?s=2048x2048&w=is&k=20&c=Cv5aMhENoBJ1qNN22LT5oisAPzpyvidx4WfvFggbRmo=",
-    },
-    {
-      id: "3",
-      name: "Test",
-      price: 8000,
-      image: "https://media.istockphoto.com/id/1442417585/es/foto/persona-recibiendo-un-pedazo-de-pizza-de-pepperoni-con-queso.jpg?s=2048x2048&w=is&k=20&c=Cv5aMhENoBJ1qNN22LT5oisAPzpyvidx4WfvFggbRmo=",
-    },
-  ];
+  useEffect(() => {
+    const loadService = async () => {
+      if (!idString) return; // Asegurar que haya un ID válido
 
-  const filteredItems = foodItems.filter((item) =>
-    item.name.toLowerCase().includes(search.toLowerCase())
-  );
+      try {
+        const fetchedService = await fetchServiceById(idString);
+        setItems(fetchedService?.items ?? []);
+      } catch (err) {
+        toastStore.addToast("Ocurrió un error, inténtelo de nuevo", "error");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadService();
+  }, [idString]);
+
+  /*  const filteredItems: Product[] = items.filter((item: Product) =>
+    item.nombre.toLowerCase().includes(search.toLowerCase())
+  ); */
 
   const handlePress = (id: string, quantity?: number) => {
-    toastStore.addToast("Agregado al carrito");
-
-    console.log("agregar al carrito, ", quantity);
+    if (categoryString === "Lugares") {
+      router.push(`/select-event-date?id=${id}`);
+    } else {
+      toastStore.addToast("Agregado al carrito");
+      console.log("agregar al carrito, ", quantity);
+    }
   };
   return (
     <View style={styles.container}>
@@ -77,27 +78,44 @@ const Products = () => {
       </View>
 
       {/* Lista de productos */}
-
-      <FlatList
-        data={filteredItems}
-        keyExtractor={(item) => item.id}
-        numColumns={2}
-        contentContainerStyle={{ paddingBottom: 100, paddingHorizontal: 10 }}
-        columnWrapperStyle={{ justifyContent: "space-between" }}
-        renderItem={({ item }) => (
-          <ServiceProductCard
-            category={categoryString}
-            item={item}
-            isService={false}
-            onPress={(id, quantity) => handlePress(id, quantity)}
-          />
-        )}
-      />
+      {loading ? (
+        <View style={styles.loaderContainer}>
+          <ActivityIndicator size="large" color="#90B1BC" />
+        </View>
+      ) : items.length === 0 ? (
+        <View style={styles.noItemsContainer}>
+          <Text style={styles.noItemsText}>
+            El servicio no tiene productos registrados
+          </Text>
+        </View>
+      ) : (
+        <FlatList
+          data={items}
+          keyExtractor={(item) => item.id}
+          numColumns={2}
+          showsVerticalScrollIndicator={false} // Oculta la barra de scroll
+          contentContainerStyle={{ paddingBottom: 25, paddingHorizontal: 10 }}
+          columnWrapperStyle={{ justifyContent: "space-between" }}
+          renderItem={({ item }) => (
+            <ServiceProductCard
+              category={categoryString}
+              item={item}
+              isService={false}
+              onPress={handlePress}
+            />
+          )}
+        />
+      )}
     </View>
   );
 };
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, backgroundColor: "#f5f5f5" },
+  container: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: "#f5f5f5",
+    overflow: "hidden",
+  },
   searchBar: {
     flexDirection: "row",
     alignItems: "center",
@@ -110,6 +128,23 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   input: { flex: 1, fontSize: 18, color: "#000" },
+  loaderContainer: {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+  },
+  noItemsContainer: {
+    position: "absolute",
+    top: "50%",
+    left: "10%",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  noItemsText: {
+    fontSize: 18,
+    color: "#666",
+    textAlign: "center",
+  },
 });
 
 export default Products;

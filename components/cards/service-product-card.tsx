@@ -1,52 +1,40 @@
 import React, { useState } from "react";
 import { View, Text, Image, Pressable, StyleSheet } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
+import { CardProps } from "@/interfaces/service-product.interface";
 
-type CardProps = {
-  item: {
-    id: string;
-    name: string;
-    address?: string;
-    description?: string;
-    image: string | null;
-    category?: string; // 'Lugares', 'Comidas', etc.
-    price?: number
-  };
-  category?: string;
-  isService?: boolean;
-};
-
-const ServiceProductCard = ({
+const ServiceProductCard: React.FC<CardProps> = ({
   category,
   item,
   isService,
   onPress,
-}: CardProps & { onPress: (id: string, quantity?: number) => void }) => {
+}) => {
   const [quantity, setQuantity] = useState(1);
 
-  return ( 
+  return (
     <View style={[styles.card, !isService && styles.foodCard]}>
-      {item.image ? (
-        <Image source={{ uri: item.image }} style={styles.image} />
+      {item.imagen ? (
+        <Image source={{ uri: item.imagen }} style={styles.image} />
       ) : (
         <View style={styles.imagePlaceholder}>
           <MaterialIcons name="image" size={40} color="#ccc" />
         </View>
       )}
-  
+
       <View style={styles.content}>
-        <Text style={styles.name}>{item.name}</Text>
-  
-        {/* 🔹 Mostrar el precio solo si NO es un servicio */}
-        {!isService && (
-          <Text style={styles.cardPrice}>₡{item.price}</Text>
+        <Text style={styles.name}>{item.nombre}</Text>
+
+        {/* Mostrar precio solo si NO es un servicio */}
+        {!isService && "precio" in item && (
+          <Text style={styles.cardPrice}>₡{item.precio}</Text>
         )}
-  
-        {isService && item.address && (
-          <Text style={styles.location}>{item.address}</Text>
+
+        {isService && item.ubicacion && (
+          <Text style={styles.location}>{item.ubicacion}</Text>
         )}
-        <Text style={styles.description}>{item.description}</Text>
-  
+
+        <Text style={styles.description}>{item.descripcion}</Text>
+
         {!isService && category === "Comidas" ? (
           <View style={styles.foodActions}>
             <View style={styles.quantityContainer}>
@@ -64,7 +52,7 @@ const ServiceProductCard = ({
                 <Text>+</Text>
               </Pressable>
             </View>
-  
+
             <Pressable
               style={styles.button}
               onPress={() => onPress(item.id, quantity)}
@@ -74,18 +62,24 @@ const ServiceProductCard = ({
           </View>
         ) : (
           <Pressable
-            style={[styles.button, category !== "Comidas" && styles.fixedButton]}
+            style={[
+              styles.button,
+              category !== "Comidas" && styles.fixedButton,
+            ]}
             onPress={() => onPress(item.id)}
           >
             <Text style={styles.buttonText}>
-              {isService ? "Ver Productos" : "Agregar"}
+              {!isService && category === "Lugares"
+                ? "Seleccionar"
+                : isService
+                ? "Ver Productos"
+                : "Agregar"}
             </Text>
           </Pressable>
         )}
       </View>
     </View>
   );
-  
 };
 
 const styles = StyleSheet.create({
@@ -93,7 +87,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 10,
     marginBottom: 20,
-    elevation: 5,
+    elevation: 5, // Andoid
     width: "48%",
     overflow: "hidden",
     alignItems: "center",
@@ -117,7 +111,7 @@ const styles = StyleSheet.create({
     padding: 10,
     flex: 1,
     justifyContent: "space-between",
-    alignItems: "center"
+    alignItems: "center",
   },
   name: {
     fontSize: 18,
@@ -164,7 +158,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginTop: "auto", 
+    marginTop: "auto",
     width: "100%",
   },
   button: {
