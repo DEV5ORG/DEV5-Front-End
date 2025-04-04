@@ -92,7 +92,7 @@ const Login = observer(() => {
         style={styles.buttonSpacing}
       />
 
-      <TouchableOpacity onPress={() => console.log("")}>
+      <TouchableOpacity onPress={() => {}}>
         <Text style={styles.resetText}>Recuperar contraseña</Text>
       </TouchableOpacity>
     </View>
