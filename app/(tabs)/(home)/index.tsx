@@ -9,21 +9,18 @@ import {
 import { ThemedText } from "@/components/themed-text";
 import EventCard from "@/components/cards/event-card";
 import { getEventsForUser } from "@/services/events.service"; // ✅ Updated import
-/* import { EventCardProps } from "@/interfaces/event-card.interface"; */
 import { Colors } from "@/constants/Colors";
 import { useStores } from "@/context/root-store-provider";
-import { router, useRouter } from "expo-router";
-
+import { router } from "expo-router";
 import { getFirstWord } from "@/utils/text.utils";
 import { observer } from "mobx-react-lite";
-import { Route } from "expo-router/build/Route";
-
+import { EventCardProps } from "@/interfaces/event-card.interface";
 
 const Home = observer(() => {
-  const [events, setEvents] = useState<any[]>([]);
+  const [events, setEvents] = useState<EventCardProps[]>([]);
   const [loading, setLoading] = useState(true);
   const { authStore } = useStores();
-  let user: any = authStore.user; // Assumes user contains an `id` field
+  const user = authStore.user; // Assumes user contains an `id` field
 
   useEffect(() => {
     const loadEvents = async () => {
@@ -31,7 +28,11 @@ const Home = observer(() => {
 
       try {
         let fetchedEvents;
-        fetchedEvents = await getEventsForUser(user.id); // Fetch events for user if ID is present
+        if (user?.id) {
+          fetchedEvents = await getEventsForUser(user.id); // Fetch events for user if ID is present
+        } else {
+          fetchedEvents = []; // Handle the case where user or user.id is null
+        }
 
         const mappedEvents = fetchedEvents.map((event: any) => ({
           id: event.id? event.id : "", // Safe navigation operator
@@ -86,7 +87,7 @@ const Home = observer(() => {
       isEditable={event.isEditable}
       totalPrice={event.totalPrice}
       orders={event.orders} // Pass orders to the EventCard if required
-    />
+      id={event.id}    />
   );
 
   return (

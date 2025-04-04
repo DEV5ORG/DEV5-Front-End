@@ -2,61 +2,22 @@ import React, { useState } from "react";
 import { View, Image, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { ThemedText } from "@/components/themed-text";
 import { Colors } from "@/constants/Colors";
+import { EventCardProps } from "@/interfaces/event-card.interface";
+import { formatDate } from "@/utils/date.utils";
 
-interface Item {
-  itemName: string;
-  itemDescription: string;
-  itemPrice: string;
-  itemLocation: string;
-  itemImage: string;
-  itemQuantity: number;
-  itemTotalPrice: number;
-}
-
-interface Order {
-  orderDate1: string;
-  orderDate2: string;
-  items: Item[];
-}
-
-interface EventCardProps {
-  imagen: string;
-  title: string;
-  date: string;
-  location: string;
-  isEditable: boolean;
-  totalPrice: number;
-  orders: Order[];
-}
-
-// Function to format the date to dd-mm-yyyy hh:mm AM/PM
-const formatDate = (dateString: string): string => {
-  const date = new Date(dateString);
-  const day = String(date.getDate()).padStart(2, "0");
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const year = date.getFullYear();
-  let hours = date.getHours();
-  let minutes = String(date.getMinutes()).padStart(2, "0");
-  const ampm = hours >= 12 ? "PM" : "AM";
-  hours = hours % 12;
-  hours = hours ? hours : 12; // the hour '0' should be '12'
-
-  return `${day}-${month}-${year} ${hours}:${minutes} ${ampm}`;
-};
 
 const EventCard: React.FC<EventCardProps> = ({
   imagen,
   title,
   date,
   location,
-  isEditable,
   totalPrice,
   orders,
 }) => {
   const [showDetails, setShowDetails] = useState(false);
 
   const toggleDetails = () => {
-    setShowDetails(!showDetails);
+    setShowDetails(prev => !prev)
   };
 
   return (
@@ -81,7 +42,7 @@ const EventCard: React.FC<EventCardProps> = ({
         {/* Button to toggle the details visibility */}
         <TouchableOpacity style={styles.toggleDetailsButton} onPress={toggleDetails}>
           <ThemedText style={styles.buttonText}>
-            {showDetails ? "Hide Details" : "Show Details"}
+            {showDetails ? "Menos Detalles" : "Mas Detalles"}
           </ThemedText>
         </TouchableOpacity>
 
@@ -90,14 +51,13 @@ const EventCard: React.FC<EventCardProps> = ({
           <View style={styles.ordersContainer}>
             {orders.map((order, index) => (
               <View key={index} style={styles.order}>
-                <ThemedText style={styles.orderEnd} type="subtitle">Order {index + 1}</ThemedText>
-                <Text>Order Date 1: {formatDate(order.orderDate1)}</Text>
-                <Text style={styles.orderEnd}>Order Date 2: {formatDate(order.orderDate2)}</Text> 
+                <Text>Fecha de Inicio: {formatDate(order.orderDate1)}</Text>
+                <Text style={styles.orderEnd}>Fecha Final: {formatDate(order.orderDate2)}</Text> 
                 {order.items.map((item, itemIndex) => (
                   <View key={itemIndex} style={styles.item}>
                     <Text style={styles.bold}>{item.itemName}</Text>
                     <Text>{item.itemDescription}</Text>
-                    <Text>Price por item: ${item.itemPrice}</Text>
+                    <Text>Precio por unidad: ${item.itemPrice}</Text>
                     <Text>Ubicación: {item.itemLocation}</Text>
                     <Text>Cantidad: {item.itemQuantity}</Text>
                     <Text>Precio Total: ${item.itemTotalPrice}</Text>
