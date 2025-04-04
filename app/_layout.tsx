@@ -30,16 +30,16 @@ const RootLayoutContent = observer(() => {
   }
 
   return (
-    <AuthGuard>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="(public)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="dark" translucent={false} />
-      {/* Toaster accesible globalmente */}
-      <Toast />
-    </AuthGuard>
+    <>
+    <Stack>
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen name="(public)" options={{ headerShown: false }} />
+      <Stack.Screen name="+not-found" />
+    </Stack>
+    <StatusBar style="dark" translucent={false} />
+    {/* Toaster accesible globalmente */}
+    <Toast />
+  </>
   );
 });
 

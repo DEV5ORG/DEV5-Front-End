@@ -12,10 +12,11 @@ import { getEventsForUser } from "@/services/events.service"; // ✅ Updated imp
 /* import { EventCardProps } from "@/interfaces/event-card.interface"; */
 import { Colors } from "@/constants/Colors";
 import { useStores } from "@/context/root-store-provider";
-import { useRouter } from "expo-router";
+import { router, useRouter } from "expo-router";
 
 import { getFirstWord } from "@/utils/text.utils";
 import { observer } from "mobx-react-lite";
+import { Route } from "expo-router/build/Route";
 
 
 const Home = observer(() => {
@@ -30,20 +31,31 @@ const Home = observer(() => {
 
       try {
         let fetchedEvents;
-          fetchedEvents = await getEventsForUser(user.id); // Fetch events for user if ID is present
-        
-        console.log(fetchedEvents)
+        fetchedEvents = await getEventsForUser(user.id); // Fetch events for user if ID is present
 
         const mappedEvents = fetchedEvents.map((event: any) => ({
-          ...event,
+          id: event.id? event.id : "", // Safe navigation operator
+          title: event.nombreEvento? event.nombreEvento : "", // Safe navigation operator
           image: event.imagen,
-          title: event.nombreEvento,
           date: event.fechaHoraInicio,
           location: event.ubicacion,
           totalPrice: event.presupuestoFinal,
           isEditable: event.editable,
-          // You can add more properties here if necessary
-          onEdit: () => handleEventEdit(event.nombreEvento),
+          // Handle nested 'ordenes' field to map items safely
+          orders: (event.ordenes || []).map((order: any) => ({
+            orderDate1: order?.fecha1? order.fecha1 : "", // Safe navigation operator
+            orderDate2: order?.fecha2? order.fecha2 : "", // Safe navigation operator
+            // Handle 'itemsDeOrden' safely by checking if it exists
+            items: (order.itemsDeOrden || []).map((item: any) => ({
+              itemName: item?.item?.nombre? item.item.nombre: "", // Safe navigation operator
+              itemDescription: item?.item?.descripcion? item.item.descripcion: "", // Safe navigation operator
+              itemPrice: item?.item?.precio? item.item.precio : "", // Safe navigation operator
+              itemLocation: item?.item?.ubicacion?  item.item.ubicacion: "", // Safe navigation operator
+              itemImage: item?.item?.imagen? item.item.imagen: "", // Safe navigation operator
+              itemQuantity: item?.cantidad? item.cantidad : 0, // Safe navigation operator
+              itemTotalPrice: item?.precioTotal? item.precioTotal : 0, // Safe navigation operator
+            }))
+          }))
         }));
 
         setEvents(mappedEvents);
@@ -57,31 +69,23 @@ const Home = observer(() => {
     loadEvents();
   }, [user?.id]); // Only run when `user?.id` changes
 
-  const handleEventEdit = (eventTitle: string) => {
-    console.log(`Editing event: ${eventTitle}`);
-    // navigation.navigate('EditEvent', { eventTitle });
-  };
 
   const handleNewEvent = () => {
     // Here you would navigate to the create event screen
-    console.log("Navigate to new event creation screen");
+    router.push("/(tabs)/(home)/services"); // Use the router to navigate to the create event screen
     // navigation.navigate('CreateEvent');
   };
 
   const renderEventCard = (event: any, index: number) => (
-
     <EventCard
       key={index}
-      imagen={event.imagen}
+      imagen={event.image}
       title={event.title}
       date={event.date}
       location={event.location}
-      onEdit={() => handleEventEdit(event.title)}
       isEditable={event.isEditable}
       totalPrice={event.totalPrice}
-      food={event.ordenes} // If needed, map this too from the fetched data
-      place={event.ordenes} // If needed, map this too from the fetched data
-      entertainment={event.ordenes} // If needed, map this too from the fetched data
+      orders={event.orders} // Pass orders to the EventCard if required
     />
   );
 

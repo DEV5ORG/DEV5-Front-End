@@ -6,23 +6,20 @@ import { useStores } from "@/context/root-store-provider";
 interface IAuthGuardProps {
   children: React.ReactNode;
 }
-
 export const AuthGuard = observer(({ children }: IAuthGuardProps) => {
-  const segments = useSegments();
   const router = useRouter();
+  const segments = useSegments();
   const { authStore } = useStores();
 
-  useEffect(() => {
-    if (authStore.isLoading) return;
-    const inAuthGroup = segments[0] === "(tabs)";
-    const inPublicGroup =
-      segments[0] === "(public)" || segments[0] === "+not-found";
-    if (!authStore.isLoggedIn && !inPublicGroup) {
-      router.replace("/(public)/login");
-    } 
-  }, [authStore.isLoggedIn, segments, authStore.isLoading]);
+  const shouldRedirect = !authStore.isLoading && !authStore.isLoggedIn;
 
-  if (authStore.isLoading) {
+  useEffect(() => {
+    if (shouldRedirect) {
+      router.replace("/(public)/login");
+    }
+  }, [segments, shouldRedirect]);
+
+  if (authStore.isLoading || shouldRedirect) {
     return null;
   }
 
