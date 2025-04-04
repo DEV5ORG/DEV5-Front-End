@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   View,
   Text,
@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import ServiceProductCard from "@/components/cards/service-product-card";
-import { fetchServiceById, searchProducts } from "@/services/product-service";
+import { fetchServiceById } from "@/services/product-service";
 import { useStores } from "@/context/root-store-provider";
 
 import { useRouter, useLocalSearchParams } from "expo-router";
@@ -46,10 +46,17 @@ const Products = () => {
 
     loadService();
   }, [idString]);
-
-  /*  const filteredItems: Product[] = items.filter((item: Product) =>
-    item.nombre.toLowerCase().includes(search.toLowerCase())
-  ); */
+  const filteredItems = useMemo(() => {
+    const searchLower = search.toLowerCase();
+    return items.filter((item) =>
+      [
+        item.nombre,
+        item.descripcion,
+        item.ubicacion,
+        item.precio.toString(),
+      ].some((field) => field.toLowerCase().includes(searchLower))
+    );
+  }, [search, items]); // Se recalcula solo cuando search o items cambian
 
   const handlePress = (id: string, quantity?: number) => {
     if (categoryString === "Lugares") {
@@ -62,7 +69,10 @@ const Products = () => {
   return (
     <View style={styles.container}>
       {/* Encabezado con imagen TODO*/}
-
+      <Pressable style={styles.backButton} onPress={() => router.back()}>
+        <MaterialIcons name="arrow-back" size={24} color="black" />
+        <Text style={styles.backText}>Atrás</Text>
+      </Pressable>
       {/* Barra de búsqueda */}
       <View style={styles.searchBar}>
         <TextInput
@@ -82,15 +92,17 @@ const Products = () => {
         <View style={styles.loaderContainer}>
           <ActivityIndicator size="large" color="#90B1BC" />
         </View>
-      ) : items.length === 0 ? (
+      ) : filteredItems.length === 0 ? (
         <View style={styles.noItemsContainer}>
           <Text style={styles.noItemsText}>
-            El servicio no tiene productos registrados
+            {items.length === 0
+              ? "El servicio no tiene productos registrados."
+              : "No se encontraron resultados para la búsqueda."}
           </Text>
         </View>
       ) : (
         <FlatList
-          data={items}
+          data={filteredItems}
           keyExtractor={(item) => item.id}
           numColumns={2}
           showsVerticalScrollIndicator={false} // Oculta la barra de scroll
@@ -136,14 +148,27 @@ const styles = StyleSheet.create({
   noItemsContainer: {
     position: "absolute",
     top: "50%",
-    left: "10%",
-    alignItems: "center",
+    left: 0,  // Alineado al borde izquierdo
+    right: 0, // Alineado al borde derecho
     justifyContent: "center",
+    alignItems: "center",
+    textAlign: "center",
   },
   noItemsText: {
     fontSize: 18,
     color: "#666",
     textAlign: "center",
+  },
+  backButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  
+  backText: {
+    fontSize: 16,
+    marginLeft: 5,
+    color: "#000",
   },
 });
 
