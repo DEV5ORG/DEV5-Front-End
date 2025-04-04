@@ -61,7 +61,9 @@ const Services = () => {
   const filteredServices = servicesData.filter(
     (service) =>
       service.tipoServicio === category &&
-      service.nombre.toLowerCase().includes(search.toLowerCase())
+      [service.nombre, service.descripcion, service.ubicacion].some((field) =>
+        field.toLowerCase().includes(search.toLowerCase())
+      )
   );
 
   return (
@@ -105,7 +107,9 @@ const Services = () => {
       ) : filteredServices.length === 0 ? (
         <View style={styles.noItemsContainer}>
           <Text style={styles.noItemsText}>
-            No hay servicios disponibles en esta categoría.
+          {servicesData.length === 0
+        ? "No hay servicios disponibles en esta categoría."
+        : "No se encontraron resultados para la búsqueda."}
           </Text>
         </View>
       ) : (
