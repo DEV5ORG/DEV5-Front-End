@@ -148,9 +148,11 @@ const styles = StyleSheet.create({
   noItemsContainer: {
     position: "absolute",
     top: "50%",
-    left: "10%",
-    alignItems: "center",
+    left: 0,  // Alineado al borde izquierdo
+    right: 0, // Alineado al borde derecho
     justifyContent: "center",
+    alignItems: "center",
+    textAlign: "center",
   },
   noItemsText: {
     fontSize: 18,
