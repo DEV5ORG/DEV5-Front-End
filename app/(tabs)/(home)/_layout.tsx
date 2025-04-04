@@ -22,6 +22,24 @@ const HomeLayout = () => {
           ),
         }}
       />
+       <Stack.Screen
+        name="services"
+        options={{
+          headerTitle: () => <ThemedText>Servicios</ThemedText>,
+        }}
+      />
+       <Stack.Screen
+        name="products"
+        options={{
+          headerTitle: () => <ThemedText>Productos</ThemedText>,
+        }}
+      />
+         <Stack.Screen
+        name="select-event-date"
+        options={{
+          headerTitle: () => <ThemedText>Productos</ThemedText>,
+        }}
+      />
     </Stack>
   );
 };

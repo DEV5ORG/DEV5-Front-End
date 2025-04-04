@@ -11,17 +11,18 @@ import EventCard from "@/components/cards/event-card";
 import { getEventsForUser } from "@/services/events.service"; // ✅ Updated import
 /* import { EventCardProps } from "@/interfaces/event-card.interface"; */
 import { Colors } from "@/constants/Colors";
-import { useNavigation } from "@react-navigation/native";
 import { useStores } from "@/context/root-store-provider";
+import { useRouter } from "expo-router";
+
 import { getFirstWord } from "@/utils/text.utils";
 import { observer } from "mobx-react-lite";
+
 
 const Home = observer(() => {
   const [events, setEvents] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const { authStore } = useStores();
   let user: any = authStore.user; // Assumes user contains an `id` field
-  useNavigation();
 
   useEffect(() => {
     const loadEvents = async () => {
@@ -62,6 +63,7 @@ const Home = observer(() => {
   };
 
   const handleNewEvent = () => {
+    // Here you would navigate to the create event screen
     console.log("Navigate to new event creation screen");
     // navigation.navigate('CreateEvent');
   };
