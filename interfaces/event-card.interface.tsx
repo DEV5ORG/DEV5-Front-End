@@ -1,57 +1,27 @@
-// interfaces/event-card.interface.tsx
-
-export interface FoodService {
-  image: string;
-  serviceName: string;
-  order: string;
-  price: string;
-  location: string;
-  requestedDeliveryDateTime: string;
-  requestedDeliveryLocation: string;
-  isEditable: boolean;
+export interface EventCardOrderItem {
+  itemName: string;
+  itemDescription: string;
+  itemPrice: string;
+  itemLocation: string;
+  itemImage: string;
+  itemQuantity: number;
+  itemTotalPrice: number;
 }
 
-export interface Place {
-  image: string;
-  title: string;
-  location: string;
-  orderUnits: string;
-  unitType: string;
-  pricePerUnit: string;
-  priceBeforeDiscount: string;
-  discountPercentage: string;
-  finalPrice: string;
-  date: string;
-  arrivalTime: string;
-  finalizationTime: string;
-  isEditable: boolean;
-}
-
-export interface Entertainment {
-  image: string;
-  title: string;
-  location: string;
-  orderUnits: string;
-  unitType: string;
-  pricePerUnit: string;
-  priceBeforeDiscount: string;
-  discountPercentage: string;
-  finalPrice: string;
-  date: string;
-  arrivalTime: string;
-  finalizationTime: string;
-  isEditable: boolean;
+export interface EventCardOrder {
+  orderDate1: string;
+  orderDate2: string;
+  items: EventCardOrderItem[];
 }
 
 export interface EventCardProps {
-  image: string;
+  id: string;
+  imagen: string; // Used in JSX props
   title: string;
   date: string;
   location: string;
-  onEdit: () => void;
+  onEdit?: () => void; // Optional since it's not used in the current usage
   isEditable: boolean;
   totalPrice: string;
-  food: FoodService;
-  place: Place;
-  entertainment: Entertainment;
+  orders: EventCardOrder[];
 }

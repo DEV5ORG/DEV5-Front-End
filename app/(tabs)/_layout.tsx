@@ -5,9 +5,11 @@ import { HapticTab } from "@/components/haptic-tab";
 import TabBarBackground from "@/components/ui/tab-bar-background";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
+import { AuthGuard } from "@/components/guards/auth-guard";
 
 export default function TabLayout() {
   return (
+    <AuthGuard>
     <Tabs
       initialRouteName="(home)"
       screenOptions={{
@@ -27,7 +29,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="(home)"
         options={{
-          title: "Inicio",
+          title: "Eventos",
           tabBarIcon: ({ color }) => (
             <MaterialIcons size={28} name="home" color={color} />
           ),
@@ -52,5 +54,6 @@ export default function TabLayout() {
         }}
       />
     </Tabs>
+    </AuthGuard>
   );
 }

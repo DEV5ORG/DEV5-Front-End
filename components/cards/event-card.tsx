@@ -1,83 +1,70 @@
 import React, { useState } from "react";
-import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { EventCardProps } from "@/interfaces/event-card.interface";
+import { View, Image, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { ThemedText } from "@/components/themed-text";
 import { Colors } from "@/constants/Colors";
+import { EventCardProps } from "@/interfaces/event-card.interface";
+import { formatDate } from "@/utils/date.utils";
+
 
 const EventCard: React.FC<EventCardProps> = ({
-  image,
+  imagen,
   title,
   date,
   location,
-  onEdit,
-  isEditable,
   totalPrice,
-  food,
-  place,
-  entertainment,
+  orders,
 }) => {
-  const [expanded, setExpanded] = useState(false);
+  const [showDetails, setShowDetails] = useState(false);
 
-  const renderSection = (sectionTitle: string, data: any) => (
-    <View style={styles.section}>
-      <Text style={styles.sectionTitle}>{sectionTitle}</Text>
-      {Object.entries(data).map(([key, value]) => {
-        // Skip certain fields we don't want to display
-        if (key === "image" || key === "isEditable") return null;
-
-        return (
-          <View key={key} style={styles.detailRow}>
-            <Text style={styles.detailLabel}>
-              {key.charAt(0).toUpperCase() +
-                key.slice(1).replace(/([A-Z])/g, " $1")}
-              :
-            </Text>
-            <Text style={styles.detailValue}>{value as string}</Text>
-          </View>
-        );
-      })}
-    </View>
-  );
+  const toggleDetails = () => {
+    setShowDetails(prev => !prev)
+  };
 
   return (
-    <View style={[styles.card, expanded && styles.expandedCard]}>
-      <Image source={{ uri: image }} style={styles.image} />
-      <View style={styles.content}>
-        <Text style={styles.title}>{title}</Text>
-        <View style={styles.infoRow}>
-          <Ionicons name="calendar" size={16} color={Colors.icon} />
-          <Text style={styles.infoText}>{date}</Text>
+    <View style={styles.card}>
+      <Image source={{ uri: imagen }} style={styles.eventImage} />
+
+      <View style={styles.details}>
+        <ThemedText type="title" style={styles.title}>
+          {title}
+        </ThemedText>
+        <ThemedText type="subtitle" style={styles.date}>
+          {formatDate(date)} {/* Apply the formatted date */}
+        </ThemedText>
+        <ThemedText type="default" style={styles.location}>
+          {location}
+        </ThemedText>
+
+        <View style={styles.totalPriceContainer}>
+          <ThemedText type="default">Total: ${totalPrice}</ThemedText>
         </View>
-        <View style={styles.infoRow}>
-          <Ionicons name="location" size={16} color={Colors.icon} />
-          <Text style={styles.infoText}>{location}</Text>
-        </View>
 
-        {isEditable && (
-          <TouchableOpacity
-            style={styles.moreInfoButton}
-            onPress={() => setExpanded(!expanded)}
-          >
-            <Text style={styles.moreInfoText}>
-              {expanded ? "Menos información" : "Más información"}
-            </Text>
-          </TouchableOpacity>
-        )}
+        {/* Button to toggle the details visibility */}
+        <TouchableOpacity style={styles.toggleDetailsButton} onPress={toggleDetails}>
+          <ThemedText style={styles.buttonText}>
+            {showDetails ? "Menos Detalles" : "Mas Detalles"}
+          </ThemedText>
+        </TouchableOpacity>
 
-        {expanded && (
-          <View style={styles.expandedContent}>
-            <View style={styles.totalPriceContainer}>
-              <Text style={styles.totalPriceLabel}>Precio Total:</Text>
-              <Text style={styles.totalPriceValue}>{totalPrice}</Text>
-            </View>
-
-            {renderSection("Lugar", place)}
-            {renderSection("Comida", food)}
-            {renderSection("Entretenimiento", entertainment)}
-
-            <TouchableOpacity style={styles.editButton} onPress={onEdit}>
-              <Text style={styles.editButtonText}>Editar Evento</Text>
-            </TouchableOpacity>
+        {/* Toggle the visibility of the order details */}
+        {showDetails && orders.length > 0 && (
+          <View style={styles.ordersContainer}>
+            {orders.map((order, index) => (
+              <View key={index} style={styles.order}>
+                <Text>Fecha de Inicio: {formatDate(order.orderDate1)}</Text>
+                <Text style={styles.orderEnd}>Fecha Final: {formatDate(order.orderDate2)}</Text> 
+                {order.items.map((item, itemIndex) => (
+                  <View key={itemIndex} style={styles.item}>
+                    <Text style={styles.bold}>{item.itemName}</Text>
+                    <Text>{item.itemDescription}</Text>
+                    <Text>Precio por unidad: ${item.itemPrice}</Text>
+                    <Text>Ubicación: {item.itemLocation}</Text>
+                    <Text>Cantidad: {item.itemQuantity}</Text>
+                    <Text>Precio Total: ${item.itemTotalPrice}</Text>
+                  </View>
+                ))}
+              </View>
+            ))}
           </View>
         )}
       </View>
@@ -87,118 +74,77 @@ const EventCard: React.FC<EventCardProps> = ({
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: Colors.background,
-    borderRadius: 8,
-    marginVertical: 10,
-    shadowColor: Colors.black,
-    shadowOffset: { width: 0, height: 2 },
+    backgroundColor: "white",
+    borderRadius: 10,
+    marginBottom: 16,
+    shadowColor: "#000",
     shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
     shadowRadius: 4,
-    elevation: 3,
-    overflow: "hidden",
   },
-  expandedCard: {
-    marginVertical: 15,
-  },
-  image: {
+  eventImage: {
     width: "100%",
-    height: 150,
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
+    height: 200,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
   },
-  content: {
-    padding: 15,
+  details: {
+    padding: 16,
   },
   title: {
     fontSize: 18,
     fontWeight: "bold",
-    marginBottom: 10,
-    color: Colors.text,
-  },
-  infoRow: {
-    flexDirection: "row",
-    alignItems: "center",
     marginBottom: 8,
   },
-  infoText: {
-    marginLeft: 8,
-    color: Colors.icon,
+  date: {
     fontSize: 14,
+    color: Colors.gray,
+    marginBottom: 5,
   },
-  moreInfoButton: {
-    backgroundColor: Colors.link,
-    padding: 10,
-    borderRadius: 6,
-    alignItems: "center",
-    marginTop: 10,
-  },
-  moreInfoText: {
-    color: Colors.white,
-    fontWeight: "500",
-  },
-  expandedContent: {
-    marginTop: 15,
-    paddingTop: 15,
-    borderTopWidth: 1,
-    borderTopColor: Colors.black,
+  location: {
+    fontSize: 14,
+    color: Colors.gray,
+    marginBottom: 10,
   },
   totalPriceContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 15,
-    padding: 10,
-    borderRadius: 6,
-  },
-  totalPriceLabel: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: Colors.text,
-  },
-  totalPriceValue: {
-    fontSize: 16,
-    fontWeight: "700",
-    color: Colors.black,
-  },
-  section: {
-    marginBottom: 20,
-  },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: Colors.text,
+    marginTop: 10,
     marginBottom: 10,
-    backgroundColor: Colors.backgroundLight,
-    padding: 8,
-    borderRadius: 6,
-  },
-  detailRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingVertical: 4,
-    paddingHorizontal: 8,
-  },
-  detailLabel: {
-    flex: 1,
-    fontSize: 14,
-    color: Colors.icon,
-  },
-  detailValue: {
-    flex: 2,
-    fontSize: 14,
-    color: Colors.text,
-    textAlign: "right",
   },
   editButton: {
-    padding: 12,
-    borderRadius: 6,
-    alignItems: "center",
-    marginTop: 15,
+    backgroundColor: Colors.blueButton,
+    paddingVertical: 8,
+    paddingHorizontal: 14,
+    borderRadius: 8,
+    marginTop: 10,
   },
-  editButtonText: {
+  buttonText: {
     color: "white",
-    fontWeight: "600",
-    fontSize: 16,
+    fontSize: 14,
+  },
+  ordersContainer: {
+    marginTop: 20,
+    paddingLeft: 10,
+  },
+  order: {
+    marginBottom: 15,
+  },
+  item: {
+    marginBottom: 10,
+  },
+  toggleDetailsButton: {
+    backgroundColor: Colors.blue,
+    paddingVertical: 8,
+    paddingHorizontal: 14,
+    borderRadius: 8,
+    marginTop: 20,
+  },
+  orderEnd: {
+    fontSize: 14,
+    color: Colors.gray,
+    marginBottom: 10,
+  },
+  bold: {
+    fontWeight: "bold",
   },
 });
 
