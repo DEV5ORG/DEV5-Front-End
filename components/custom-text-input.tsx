@@ -8,13 +8,15 @@ import {
   Animated,
   StyleProp,
   ViewStyle,
+  KeyboardTypeOptions,
 } from "react-native";
 
 interface CustomTextInputProps {
-  label: string;
+  label?: string;
   placeholder: string;
   secureTextEntry?: boolean;
   value: string;
+  keyBoardType?: KeyboardTypeOptions;
   onChangeText: (text: string) => void;
   containerStyle: StyleProp<ViewStyle>;
   error?: string;
@@ -25,6 +27,7 @@ const CustomTextInput = ({
   placeholder,
   secureTextEntry = false,
   value,
+  keyBoardType,
   onChangeText,
   containerStyle,
   error,
@@ -49,7 +52,7 @@ const CustomTextInput = ({
 
   return (
     <View style={[styles.inputContainer, containerStyle]}>
-      <Text style={styles.label}>{label}</Text>
+      {label && <Text style={styles.label}>{label}</Text>}
       <Animated.View
         style={[
           styles.shadowWrapper,
@@ -73,6 +76,7 @@ const CustomTextInput = ({
           onChangeText={onChangeText}
           onFocus={handleFocus}
           onBlur={handleBlur}
+          keyboardType={keyBoardType}
         />
       </Animated.View>
       {error && <Text style={styles.errorText}>{error}</Text>}

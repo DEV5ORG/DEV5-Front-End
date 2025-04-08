@@ -1,7 +1,7 @@
 import { Colors } from "@/constants/Colors";
 import CustomButton from "@/components/custom-button";
 import CustomTextInput from "@/components/custom-text-input";
-import { View, Image, TouchableOpacity, Text, StyleSheet } from "react-native";
+import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
 import { signIn } from "@/services/auth.service";
 import { useRouter } from "expo-router";
 import { useStores } from "@/context/root-store-provider";
@@ -56,6 +56,10 @@ const Login = observer(() => {
     router.push("/(public)/register");
   };
 
+  const handleOnResetPassword = () => {
+    router.push("/(public)/request-password-reset");
+  };
+
   return (
     <View style={styles.container}>
       <Logo size={120} style={styles.logo} />
@@ -92,7 +96,7 @@ const Login = observer(() => {
         style={styles.buttonSpacing}
       />
 
-      <TouchableOpacity onPress={() => console.log("")}>
+      <TouchableOpacity onPress={handleOnResetPassword}>
         <Text style={styles.resetText}>Recuperar contraseña</Text>
       </TouchableOpacity>
     </View>
@@ -112,7 +116,7 @@ const styles = StyleSheet.create({
   },
   resetText: {
     marginTop: 15,
-    fontSize: 14,
+    fontSize: 16,
     color: Colors.tint,
   },
   inputSpacing: {
