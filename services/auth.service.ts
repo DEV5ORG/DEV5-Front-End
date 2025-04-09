@@ -50,3 +50,45 @@ export const signUp = async (userPayload: ICreateUserPayload) => {
     }
   }
 };
+
+// Comentario para recordar actualizar los errores, el API no retorna errores correctos.
+// Una vez actualizado el API, usar el error message del API
+
+export const requestPasswordRecovery = async (email: string) => {
+  try {
+    await api.post("/api/pwd-recovery", { correoElectronico: email });
+  } catch (error) {
+    throw new Error("Correo inválido");
+  }
+};
+
+export const validateRecoveryToken = async (token: string) => {
+  try {
+    await api.get(`/api/validate-token/${token}`);
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const errorMessage = error.response?.data?.message;
+      throw new Error(errorMessage || "El código ha expirado o es inválido");
+    }
+  }
+};
+
+export const resetPassword = async (
+  token: string,
+  email: string,
+  password: string
+) => {
+  try {
+    await api.put(`/api/pwd-change/${token}`, {
+      correoElectronico: email,
+      contraseña: password,
+    });
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const errorMessage = error.response?.data?.message;
+      throw new Error(errorMessage || "Ha ocurrido un error");
+    } else {
+      throw new Error("Ocurrió un error desconocido.");
+    }
+  }
+};

@@ -6,11 +6,22 @@ import { IUser } from "@/interfaces/user.interface";
 import { STORE_TOKEN_ITEM_NAME } from "@/constants/constants";
 import IJwtDecodedData from "@/interfaces/jwt-decode.interface";
 
+interface IPasswordResetDataFlow {
+  email: string;
+  recoveryToken: string;
+}
+
+const defaultPasswordResetDataFlow: IPasswordResetDataFlow = {
+  email: "",
+  recoveryToken: "",
+};
+
 export class AuthStore {
+  root: RootStore;
   user: IUser | null = null;
   private token: string | null = null;
   isLoading = true;
-  root: RootStore;
+  passwordResetDataFlow = defaultPasswordResetDataFlow;
 
   constructor(root: RootStore) {
     makeAutoObservable(this);
@@ -36,6 +47,15 @@ export class AuthStore {
   setToken = (value: string | null) => {
     this.token = value;
   };
+
+  setPasswordResetDataFlow(data: Partial<IPasswordResetDataFlow>) {
+    (Object.keys(data) as (keyof IPasswordResetDataFlow)[]).forEach((key) => {
+      const value = data[key];
+      if (value !== undefined) {
+        this.passwordResetDataFlow[key] = value;
+      }
+    });
+  }
 
   private isTokenExpired(token: string): boolean {
     try {
@@ -81,5 +101,9 @@ export class AuthStore {
     } finally {
       this.setIsLoading(false);
     }
+  }
+
+  resetPasswordResetDataFlow() {
+    this.passwordResetDataFlow = defaultPasswordResetDataFlow;
   }
 }

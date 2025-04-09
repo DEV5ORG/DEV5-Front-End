@@ -18,7 +18,10 @@ interface ValidationSchema {
     pattern?: { value: RegExp; message: string };
     minLength?: { value: number; message: string };
     isSecurePassword?: boolean;
-    test?: { value: (value: string) => boolean; message: string };
+    test?: {
+      value: (value: string, formValues: FormValues) => boolean;
+      message: string;
+    };
   };
 }
 
@@ -117,7 +120,7 @@ const useForm = <T extends FormValues>({
       }
     }
 
-    if (rules?.test?.value && !rules.test.value(value)) {
+    if (rules?.test?.value && !rules.test.value(value, formValues)) {
       isValid = false;
       errorMessage = rules.test.message;
     }
