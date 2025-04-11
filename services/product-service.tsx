@@ -6,6 +6,6 @@ export const fetchServiceById = async (serviceId: string) => {
     return data;
   } catch (error) {
     console.error("Error fetching service by ID:", error);
-    throw new Error("Error al cargar los datos .");
+    throw new Error("Error al cargar los datos.");
   }
 };

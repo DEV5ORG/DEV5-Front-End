@@ -67,7 +67,7 @@ export const validateRecoveryToken = async (token: string) => {
     await api.get(`/api/validate-token/${token}`);
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      const errorMessage = error.response?.data?.message;
+      const errorMessage = error.response?.data;
       throw new Error(errorMessage || "El código ha expirado o es inválido");
     }
   }
@@ -85,7 +85,7 @@ export const resetPassword = async (
     });
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      const errorMessage = error.response?.data?.message;
+      const errorMessage = error.response?.data;
       throw new Error(errorMessage || "Ha ocurrido un error");
     } else {
       throw new Error("Ocurrió un error desconocido.");
