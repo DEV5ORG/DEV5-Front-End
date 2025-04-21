@@ -22,6 +22,6 @@ export interface EventCardProps {
   location: string;
   onEdit?: () => void; // Optional since it's not used in the current usage
   isEditable: boolean;
-  totalPrice: string;
+  totalPrice: number;
   orders: EventCardOrder[];
 }

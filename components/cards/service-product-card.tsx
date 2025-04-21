@@ -1,86 +1,78 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, Image, Pressable, StyleSheet } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
-import { CardProps } from "@/interfaces/service-product.interface";
+import { CardProps, Product } from "@/interfaces/service-product.interface";
+import { useStores } from "@/context/root-store-provider";
+import QuantityToggle from "../quantity-toggle";
+import { observer } from "mobx-react-lite";
 
-const ServiceProductCard: React.FC<CardProps> = ({
-  category,
-  item,
-  isService,
-  onPress,
-}) => {
-  const [quantity, setQuantity] = useState(1);
-
-  return (
-    <View style={[styles.card, !isService && styles.foodCard]}>
-      {item.imagen ? (
-        <Image source={{ uri: item.imagen }} style={styles.image} />
-      ) : (
-        <View style={styles.imagePlaceholder}>
-          <MaterialIcons name="image" size={40} color="#ccc" />
-        </View>
-      )}
-
-      <View style={styles.content}>
-        <Text style={styles.name}>{item.nombre}</Text>
-
-        {/* Mostrar precio solo si NO es un servicio */}
-        {!isService && "precio" in item && (
-          <Text style={styles.cardPrice}>₡{item.precio}</Text>
-        )}
-
-        {isService && item.ubicacion && (
-          <Text style={styles.location}>{item.ubicacion}</Text>
-        )}
-
-        <Text style={styles.description}>{item.descripcion}</Text>
-
-        {!isService && category === "Comidas" ? (
-          <View style={styles.foodActions}>
-            <View style={styles.quantityContainer}>
-              <Pressable
-                onPress={() => setQuantity(Math.max(1, quantity - 1))}
-                style={styles.quantityButton}
-              >
-                <Text>-</Text>
-              </Pressable>
-              <Text style={styles.quantity}>{quantity}</Text>
-              <Pressable
-                onPress={() => setQuantity(quantity + 1)}
-                style={styles.quantityButton}
-              >
-                <Text>+</Text>
-              </Pressable>
-            </View>
-
-            <Pressable
-              style={styles.button}
-              onPress={() => onPress(item.id, quantity)}
-            >
-              <Text style={styles.buttonText}>Agregar</Text>
-            </Pressable>
-          </View>
+const ServiceProductCard: React.FC<CardProps> = observer(
+  ({ category, item, isService, onPress }) => {
+    const { eventStore } = useStores();
+    const existingItem = eventStore.getItemByItemId(item.id);
+    return (
+      <View style={[styles.card, !isService && styles.foodCard]}>
+        {item.imagen ? (
+          <Image source={{ uri: item.imagen }} style={styles.image} />
         ) : (
-          <Pressable
-            style={[
-              styles.button,
-              category !== "Comidas" && styles.fixedButton,
-            ]}
-            onPress={() => onPress(item.id)}
-          >
-            <Text style={styles.buttonText}>
-              {!isService && category === "Lugares"
-                ? "Seleccionar"
-                : isService
-                ? "Ver Productos"
-                : "Agregar"}
-            </Text>
-          </Pressable>
+          <View style={styles.imagePlaceholder}>
+            <MaterialIcons name="image" size={40} color="#ccc" />
+          </View>
         )}
+
+        <View style={styles.content}>
+          <Text style={styles.name}>{item.nombre}</Text>
+
+          {/* Mostrar precio solo si NO es un servicio */}
+          {!isService && "precio" in item && (
+            <Text style={styles.cardPrice}>₡{item.precio}</Text>
+          )}
+
+          {isService && item.ubicacion && (
+            <Text style={styles.location}>{item.ubicacion}</Text>
+          )}
+
+          <Text style={styles.description}>{item.descripcion}</Text>
+
+          <View style={styles.cardActions}>
+            {!isService && category === "Comidas" ? (
+              !existingItem?.quantity ? (
+                <Pressable
+                  style={styles.button}
+                  onPress={() => onPress(item as Product, 1)}
+                >
+                  <Text style={styles.buttonText}>Agregar</Text>
+                </Pressable>
+              ) : (
+                <QuantityToggle
+                  quantity={existingItem?.quantity!}
+                  setQuantity={(quantity) =>
+                    onPress(item as Product, quantity, true)
+                  }
+                />
+              )
+            ) : !isService && existingItem ? (
+              <Text style={styles.inCart}>Ya en carrito</Text>
+            ) : (
+              <Pressable
+                style={styles.button}
+                onPress={() => onPress(item as Product)}
+              >
+                <Text style={styles.buttonText}>
+                  {!isService && category === "Lugares"
+                    ? "Seleccionar"
+                    : isService
+                    ? "Ver Productos"
+                    : "Agregar"}
+                </Text>
+              </Pressable>
+            )}
+          </View>
+        </View>
       </View>
-    </View>
-  );
-};
+    );
+  }
+);
 
 const styles = StyleSheet.create({
   card: {
@@ -92,6 +84,9 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     alignItems: "center",
     justifyContent: "center",
+  },
+  inCart: {
+    fontWeight: "bold",
   },
   foodCard: {
     paddingBottom: 10,
@@ -134,27 +129,7 @@ const styles = StyleSheet.create({
     color: "green",
     fontSize: 14,
   },
-  quantityContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    backgroundColor: "#EEEEEE",
-    borderRadius: 50,
-  },
-  quantityButton: {
-    backgroundColor: "#ddd",
-    padding: 4,
-    borderRadius: 50,
-    minWidth: 30,
-    alignItems: "center",
-  },
-  quantity: {
-    fontSize: 14,
-    fontWeight: "bold",
-    marginHorizontal: 10,
-    textAlign: "center",
-  },
-  foodActions: {
+  cardActions: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -164,7 +139,8 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: "#3F9FC0",
     paddingVertical: 5,
-    paddingHorizontal: 10,
+    paddingHorizontal: 15,
+    width: "100%",
     borderRadius: 30,
     alignItems: "center",
     justifyContent: "center",
@@ -174,9 +150,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 14,
     textAlign: "center",
-  },
-  fixedButton: {
-    width: 150,
   },
 });
 

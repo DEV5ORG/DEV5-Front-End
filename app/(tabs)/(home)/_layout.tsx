@@ -1,4 +1,5 @@
 import HeaderLeftIcon from "@/components/navigation/header-left-icon";
+import ShoppingCartIcon from "@/components/shopping-cart-icon";
 import { ThemedText } from "@/components/themed-text";
 import { Colors } from "@/constants/Colors";
 import { AntDesign } from "@expo/vector-icons";
@@ -22,22 +23,30 @@ const HomeLayout = () => {
           ),
         }}
       />
-       <Stack.Screen
+      <Stack.Screen
         name="services"
         options={{
           headerTitle: () => <ThemedText>Servicios</ThemedText>,
+          headerRight: () => <ShoppingCartIcon />,
         }}
       />
-       <Stack.Screen
+      <Stack.Screen
         name="products"
         options={{
           headerTitle: () => <ThemedText>Productos</ThemedText>,
+          headerRight: () => <ShoppingCartIcon />,
         }}
       />
-         <Stack.Screen
+      <Stack.Screen
         name="select-event-date"
         options={{
           headerTitle: () => <ThemedText>Productos</ThemedText>,
+        }}
+      />
+      <Stack.Screen
+        name="shopping-cart"
+        options={{
+          headerTitle: "",
         }}
       />
     </Stack>

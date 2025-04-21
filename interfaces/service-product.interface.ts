@@ -1,3 +1,5 @@
+import { ServiceCategory } from "./service-category";
+
 export interface Product {
   id: string;
   nombre: string;
@@ -20,7 +22,7 @@ export interface Service {
 
 export interface CardProps {
   item: Product | Service;
-  category?: string;
+  category?: ServiceCategory;
   isService?: boolean;
-  onPress: (id: string, quantity?: number) => void;
+  onPress: (item: Product, quantity?: number, isUpdate?: boolean) => void;
 }

@@ -1,5 +1,5 @@
 import { Colors } from "@/constants/Colors";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import {
   View,
   Text,
@@ -13,12 +13,13 @@ import {
 
 interface CustomTextInputProps {
   label?: string;
-  placeholder: string;
+  placeholder?: string;
   secureTextEntry?: boolean;
-  value: string;
+  value?: string;
   keyBoardType?: KeyboardTypeOptions;
-  onChangeText: (text: string) => void;
-  containerStyle: StyleProp<ViewStyle>;
+  onChangeText?: (text: string) => void;
+  containerStyle?: StyleProp<ViewStyle>;
+  renderTextField?: ReactNode;
   error?: string;
 }
 
@@ -30,6 +31,7 @@ const CustomTextInput = ({
   keyBoardType,
   onChangeText,
   containerStyle,
+  renderTextField,
   error,
 }: CustomTextInputProps) => {
   const borderColor = useState(new Animated.Value(1))[0];
@@ -53,32 +55,34 @@ const CustomTextInput = ({
   return (
     <View style={[styles.inputContainer, containerStyle]}>
       {label && <Text style={styles.label}>{label}</Text>}
-      <Animated.View
-        style={[
-          styles.shadowWrapper,
-          {
-            borderColor: borderColor.interpolate({
-              inputRange: [0, 1],
-              outputRange: [
-                error ? Colors.borderError : Colors.borderFocus,
-                error ? Colors.borderError : Colors.borderDefault,
-              ],
-            }),
-          },
-        ]}
-      >
-        <TextInput
-          style={styles.input}
-          placeholder={placeholder}
-          placeholderTextColor={Colors.placeholderText}
-          secureTextEntry={secureTextEntry}
-          value={value}
-          onChangeText={onChangeText}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-          keyboardType={keyBoardType}
-        />
-      </Animated.View>
+      {renderTextField || (
+        <Animated.View
+          style={[
+            styles.shadowWrapper,
+            {
+              borderColor: borderColor.interpolate({
+                inputRange: [0, 1],
+                outputRange: [
+                  error ? Colors.borderError : Colors.borderFocus,
+                  error ? Colors.borderError : Colors.borderDefault,
+                ],
+              }),
+            },
+          ]}
+        >
+          <TextInput
+            style={styles.input}
+            placeholder={placeholder}
+            placeholderTextColor={Colors.placeholderText}
+            secureTextEntry={secureTextEntry}
+            value={value}
+            onChangeText={onChangeText}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            keyboardType={keyBoardType}
+          />
+        </Animated.View>
+      )}
       {error && <Text style={styles.errorText}>{error}</Text>}
     </View>
   );
