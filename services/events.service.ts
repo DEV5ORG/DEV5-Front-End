@@ -11,3 +11,12 @@ export const getEventsForUser = async (userId: string) => {
     throw new Error("Failed to fetch events.");
   }
 };
+
+export const getEventsCountByUser = async (userId: string) => {
+  try {
+    const { data } = await api.get(`/api/eventos/count/${userId}`);
+    return data;
+  } catch (error) {
+    throw new Error("Hubo un error al cargar la información.");
+  }
+};
