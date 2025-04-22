@@ -17,6 +17,7 @@ export const Colors = {
   backgroundLight: "#f5f5f5",
   gray: "#132C35",
   gray2: "#333",
+  gray4: "#424242",
   gray3: "#E1E1E1",
   link: "#0047AB",
   white: "#FFFFFF",

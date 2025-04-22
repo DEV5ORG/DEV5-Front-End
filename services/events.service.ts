@@ -14,6 +14,15 @@ export const getEventsForUser = async (userId: string) => {
   }
 };
 
+export const getEventsCountByUser = async (userId: string) => {
+  try {
+    const { data } = await api.get(`/api/eventos/count/${userId}`);
+    return data;
+  } catch (error) {
+    throw new Error("Hubo un error al cargar la información.");
+  }
+};
+
 export const createEvent = async (createEventPayload: ICreateEventPayload) => {
   try {
     await api.post("/api/eventos", createEventPayload);
