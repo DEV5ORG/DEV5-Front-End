@@ -1,8 +1,8 @@
 import { useState } from "react";
 
-interface FormValues {
-  [key: string]: string;
-}
+type FormValues<T = any> = {
+  [K in keyof T]: T[K];
+};
 
 type Errors<T extends FormValues> = {
   [K in keyof T]?: string;
@@ -19,7 +19,7 @@ interface ValidationSchema {
     minLength?: { value: number; message: string };
     isSecurePassword?: boolean;
     test?: {
-      value: (value: string, formValues: FormValues) => boolean;
+      value: (value: string | any, formValues: FormValues) => boolean;
       message: string;
     };
   };
@@ -59,11 +59,20 @@ const useForm = <T extends FormValues>({
     return typeof message === "function" ? message(formValues) : message;
   };
 
-  const validateField = (field: keyof T, value: string): boolean => {
-    value = value.trim();
+  const validateField = (field: keyof T, rawValue: string): boolean => {
+    let value = rawValue;
     const rules = validationSchema[String(field)];
+
+    // Si no hay reglas, retornar true
+    if (!rules) {
+      return true;
+    }
+
     let isValid = true;
     let errorMessage = "";
+    if (typeof value === "string") {
+      value = value.trim() as any;
+    }
 
     if (rules?.required?.value && value === "") {
       isValid = false;
@@ -154,7 +163,8 @@ const useForm = <T extends FormValues>({
     submitFunction: (formData: T) => Promise<void>
   ) => {
     if (isLoading && preventMultipleSubmissions) return;
-    if (validateForm()) {
+    const isValid = validateForm();
+    if (isValid) {
       setIsLoading(true);
       try {
         await submitFunction(formValues);

@@ -17,6 +17,7 @@ export const Colors = {
   backgroundLight: "#f5f5f5",
   gray: "#132C35",
   gray2: "#333",
+  gray3: "#E1E1E1",
   link: "#0047AB",
   white: "#FFFFFF",
   shadow: "#0000003f",
@@ -32,4 +33,6 @@ export const Colors = {
   green: "#4CAF50",
   yellow: "#FFC107",
   blue: "#2196F3",
+  disabledButtonBg: "#e0e0e0",
+  disabledButtonText: "#9e9e9e",
 };

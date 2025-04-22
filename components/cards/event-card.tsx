@@ -5,7 +5,6 @@ import { Colors } from "@/constants/Colors";
 import { EventCardProps } from "@/interfaces/event-card.interface";
 import { formatDate } from "@/utils/date.utils";
 
-
 const EventCard: React.FC<EventCardProps> = ({
   imagen,
   title,
@@ -17,7 +16,7 @@ const EventCard: React.FC<EventCardProps> = ({
   const [showDetails, setShowDetails] = useState(false);
 
   const toggleDetails = () => {
-    setShowDetails(prev => !prev)
+    setShowDetails((prev) => !prev);
   };
 
   return (
@@ -36,11 +35,16 @@ const EventCard: React.FC<EventCardProps> = ({
         </ThemedText>
 
         <View style={styles.totalPriceContainer}>
-          <ThemedText type="default">Total: ${totalPrice}</ThemedText>
+          <ThemedText type="default">
+            Total: ₡{totalPrice.toFixed(2)}
+          </ThemedText>
         </View>
 
         {/* Button to toggle the details visibility */}
-        <TouchableOpacity style={styles.toggleDetailsButton} onPress={toggleDetails}>
+        <TouchableOpacity
+          style={styles.toggleDetailsButton}
+          onPress={toggleDetails}
+        >
           <ThemedText style={styles.buttonText}>
             {showDetails ? "Menos Detalles" : "Mas Detalles"}
           </ThemedText>
@@ -51,16 +55,13 @@ const EventCard: React.FC<EventCardProps> = ({
           <View style={styles.ordersContainer}>
             {orders.map((order, index) => (
               <View key={index} style={styles.order}>
-                <Text>Fecha de Inicio: {formatDate(order.orderDate1)}</Text>
-                <Text style={styles.orderEnd}>Fecha Final: {formatDate(order.orderDate2)}</Text> 
                 {order.items.map((item, itemIndex) => (
                   <View key={itemIndex} style={styles.item}>
                     <Text style={styles.bold}>{item.itemName}</Text>
                     <Text>{item.itemDescription}</Text>
-                    <Text>Precio por unidad: ${item.itemPrice}</Text>
-                    <Text>Ubicación: {item.itemLocation}</Text>
+                    <Text>Precio por unidad: ₡{item.itemPrice}</Text>
                     <Text>Cantidad: {item.itemQuantity}</Text>
-                    <Text>Precio Total: ${item.itemTotalPrice}</Text>
+                    <Text>Precio Total: ₡{item.itemTotalPrice.toFixed(2)}</Text>
                   </View>
                 ))}
               </View>

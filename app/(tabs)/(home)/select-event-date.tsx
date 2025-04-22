@@ -8,26 +8,63 @@ import {
   Pressable,
 } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { Colors } from "@/constants/Colors";
+import { observer } from "mobx-react-lite";
+import { useStores } from "@/context/root-store-provider";
+import useForm from "@/hooks/use-form";
+import CustomTextInput from "@/components/custom-text-input";
 
-const SelectEventDate = () => {
-  const router = useRouter();
-  const { id, category } = useLocalSearchParams();
+interface EventForm {
+  activityName: string;
+  guestCount: number;
+  date: Date;
+  startTime: Date;
+  endTime: Date;
+}
 
-  const [activityName, setActivityName] = useState("");
-  const [date, setDate] = useState(new Date());
-  const [startTime, setStartTime] = useState(new Date());
-  const [endTime, setEndTime] = useState(new Date());
+const SelectEventDate = observer(() => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [pickerMode, setPickerMode] = useState<"date" | "time">("date");
   const [pickerTarget, setPickerTarget] = useState("");
+  const router = useRouter();
+  const { eventStore } = useStores();
+
+  const { formValues, setFieldValue, handleSubmit, errors } =
+    useForm<EventForm>({
+      defaultValues: {
+        activityName: eventStore.event.eventName,
+        guestCount: eventStore.event.guestCount,
+        date: eventStore.event.date,
+        startTime: eventStore.event.startTime,
+        endTime: eventStore.event.endTime,
+      },
+      preventMultipleSubmissions: true,
+      validationSchema: {
+        activityName: {
+          required: {
+            value: true,
+            message: "El nombre de la actividad es obligatorio.",
+          },
+        },
+        guestCount: {
+          test: {
+            value: (value) => {
+              return value >= 1;
+            },
+            message: "Debe de tener al menos 1 invidado.",
+          },
+        },
+      },
+    });
 
   const handleDateChange = (selectedDate: Date) => {
     if (selectedDate) {
-      if (pickerTarget === "date") setDate(selectedDate);
-      else if (pickerTarget === "start") setStartTime(selectedDate);
-      else if (pickerTarget === "end") setEndTime(selectedDate);
+      if (pickerTarget === "date") setFieldValue("date", selectedDate as any);
+      else if (pickerTarget === "start")
+        setFieldValue("startTime", selectedDate as any);
+      else if (pickerTarget === "end")
+        setFieldValue("endTime", selectedDate as any);
     }
     setDatePickerVisibility(false);
   };
@@ -40,64 +77,114 @@ const SelectEventDate = () => {
     setPickerTarget(target);
     setDatePickerVisibility(true);
   };
- // Función para formatear la hora a formato de 12 horas (AM/PM)
- const formatTime = (time: Date) => {
+
+  // Función para formatear la hora a formato de 12 horas (AM/PM)
+  const formatTime = (time: Date) => {
     return time.toLocaleTimeString([], {
       hour: "2-digit",
       minute: "2-digit",
       hour12: true,
     });
   };
+
+  const handleOnNext = async (formData: typeof formValues) => {
+    const { activityName, guestCount, date, startTime, endTime } = formData;
+    eventStore.setEvent({
+      eventName: activityName,
+      guestCount,
+      date,
+      startTime,
+      endTime,
+    });
+    // Redirigir a la página de servicios al filtro de comidas
+    router.push(`/(tabs)/(home)/services?categorySelected=${"Comidas"}`);
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Crear Actividad</Text>
 
       {/* Nombre de la actividad */}
-      <Text style={styles.label}>Nombre de la Actividad</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Ej. Conferencia de Tecnología"
-        placeholderTextColor={Colors.placeholderText}
-        value={activityName}
-        onChangeText={setActivityName}
+      <CustomTextInput
+        label="Nombre de la Actividad"
+        error={errors.activityName}
+        containerStyle={styles.inputContainer}
+        renderTextField={
+          <TextInput
+            style={styles.input}
+            placeholder="Ej. Conferencia de Tecnología"
+            placeholderTextColor={Colors.placeholderText}
+            value={formValues.activityName}
+            onChangeText={(value) => setFieldValue("activityName", value)}
+          />
+        }
       />
-
+      <CustomTextInput
+        label="Cantidad de Invitados"
+        error={errors.guestCount}
+        containerStyle={styles.inputContainer}
+        renderTextField={
+          <TextInput
+            style={styles.input}
+            placeholder="Cuantas personas asisten al evento"
+            placeholderTextColor={Colors.placeholderText}
+            keyboardType="numeric"
+            value={formValues.guestCount?.toString() || ""}
+            onChangeText={(value) => setFieldValue("guestCount", value)}
+          />
+        }
+      />
       {/* Selección de fecha */}
-      <Text style={styles.label}>Fecha</Text>
-      <Pressable onPress={() => showDatePicker("date", "date")}>
-        <TextInput
-          style={styles.input}
-          value={date.toLocaleDateString()}
-          editable={false}
-          pointerEvents="none"
-          placeholder="Seleccionar fecha"
-        />
-      </Pressable>
-
+      <CustomTextInput
+        label="Fecha"
+        error={errors.date}
+        containerStyle={styles.inputContainer}
+        renderTextField={
+          <Pressable onPress={() => showDatePicker("date", "date")}>
+            <TextInput
+              style={styles.input}
+              value={formValues.date.toLocaleDateString()}
+              editable={false}
+              pointerEvents="none"
+              placeholder="Seleccionar fecha"
+            />
+          </Pressable>
+        }
+      />
       {/* Selección de hora de inicio */}
-      <Text style={styles.label}>Hora de Inicio</Text>
-      <Pressable onPress={() => showDatePicker("start", "time")}>
-        <TextInput
-          style={styles.input}
-          value={formatTime(startTime)}
-          editable={false}
-          pointerEvents="none"
-          placeholder="Seleccionar hora de inicio"
-        />
-      </Pressable>
-
+      <CustomTextInput
+        label="Hora de Inicio"
+        error={errors.startTime}
+        containerStyle={styles.inputContainer}
+        renderTextField={
+          <Pressable onPress={() => showDatePicker("start", "time")}>
+            <TextInput
+              style={styles.input}
+              value={formatTime(formValues.startTime)}
+              editable={false}
+              pointerEvents="none"
+              placeholder="Seleccionar hora de inicio"
+            />
+          </Pressable>
+        }
+      />
       {/* Selección de hora de fin */}
-      <Text style={styles.label}>Hora de Fin</Text>
-      <Pressable onPress={() => showDatePicker("end", "time")}>
-        <TextInput
-          style={styles.input}
-          value={formatTime(endTime)}
-          editable={false}
-          pointerEvents="none"
-          placeholder="Seleccionar hora de fin"
-        />
-      </Pressable>
-
+      <CustomTextInput
+        label="Hora de Fin"
+        error={errors.endTime}
+        containerStyle={styles.inputContainer}
+        renderTextField={
+          <Pressable onPress={() => showDatePicker("end", "time")}>
+            <TextInput
+              style={styles.input}
+              value={formatTime(formValues.endTime)}
+              editable={false}
+              pointerEvents="none"
+              placeholder="Seleccionar hora de fin"
+            />
+          </Pressable>
+        }
+      />
       {/* DateTimePickerModal */}
       <DateTimePickerModal
         isVisible={isDatePickerVisible}
@@ -109,9 +196,7 @@ const SelectEventDate = () => {
         locale={pickerMode === "date" ? "es_ES" : undefined}
         confirmTextIOS="Confirmar"
         cancelTextIOS="Cancelar"
-        
       />
-
       {/* Botones de navegación */}
       <View style={styles.buttonContainer}>
         <Pressable
@@ -122,17 +207,14 @@ const SelectEventDate = () => {
         </Pressable>
         <Pressable
           style={[styles.button, { backgroundColor: Colors.blueButton }]}
-          onPress={() => {
-        
-            router.push(`/(tabs)/(home)/services?categorySelected=${"Comidas"}`); // Redirigir a la página de servicios al filtro de comidas
-          }}
+          onPress={() => handleSubmit(handleOnNext)}
         >
           <Text style={styles.buttonText}>Siguiente</Text>
         </Pressable>
       </View>
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {
@@ -160,6 +242,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     backgroundColor: Colors.inputBackground,
     color: Colors.inputText,
+  },
+  inputContainer: {
     marginBottom: 15,
   },
   buttonContainer: {

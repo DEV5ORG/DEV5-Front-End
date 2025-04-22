@@ -15,19 +15,31 @@ import { useStores } from "@/context/root-store-provider";
 
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { Product } from "@/interfaces/service-product.interface";
+import { ServiceCategory } from "@/interfaces/service-category";
+
+interface ISearchParams {
+  id: string;
+  category: ServiceCategory;
+  serviceName: string;
+}
 
 const Products = () => {
   const router = useRouter();
-  const { id, category } = useLocalSearchParams();
-  const { toastStore } = useStores();
+  const {
+    id: serviceId,
+    category,
+    serviceName,
+  } = useLocalSearchParams() as unknown as ISearchParams;
+  const { toastStore, eventStore } = useStores();
   const [search, setSearch] = useState("");
   const [items, setItems] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
-  // asegurar  que id y category sean strings
-  const idString = Array.isArray(id) ? id[0] : id;
-  const categoryString = Array.isArray(category) ? category[0] : category;
+  // asegurar  que serviceId y category sean strings
+  const idString = Array.isArray(serviceId) ? serviceId[0] : serviceId;
+  const categoryString: ServiceCategory = Array.isArray(category)
+    ? category[0]
+    : category;
 
   useEffect(() => {
     const loadService = async () => {
@@ -58,14 +70,33 @@ const Products = () => {
     );
   }, [search, items]); // Se recalcula solo cuando search o items cambian
 
-  const handlePress = (id: string, quantity?: number) => {
+  const handlePress = (
+    item: Product,
+    quantity?: number,
+    isUpdate?: boolean
+  ) => {
     if (categoryString === "Lugares") {
-      router.push(`/select-event-date?id=${id}`);
+      eventStore.setEvent({
+        location: item.ubicacion,
+        placeHourlyRate: item.precio,
+      });
+      router.push(`/select-event-date?id=${serviceId}`);
     } else {
+      if (isUpdate) {
+        eventStore.updateItemQuantity(Number(serviceId), item.id, quantity!);
+        return;
+      }
       toastStore.addToast("Agregado al carrito");
-      console.log("agregar al carrito, ", quantity);
+      eventStore.addItemToService(
+        Number(serviceId),
+        item,
+        quantity || 1,
+        category,
+        serviceName
+      );
     }
   };
+
   return (
     <View style={styles.container}>
       {/* Encabezado con imagen TODO*/}
@@ -106,7 +137,11 @@ const Products = () => {
           keyExtractor={(item) => item.id}
           numColumns={2}
           showsVerticalScrollIndicator={false} // Oculta la barra de scroll
-          contentContainerStyle={{ paddingBottom: 25, paddingHorizontal: 10 }}
+          contentContainerStyle={{
+            paddingBottom: 25,
+            paddingHorizontal: 10,
+            paddingTop: 10,
+          }}
           columnWrapperStyle={{ justifyContent: "space-between" }}
           renderItem={({ item }) => (
             <ServiceProductCard
@@ -124,7 +159,7 @@ const Products = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    padding: 10,
     backgroundColor: "#f5f5f5",
     overflow: "hidden",
   },
@@ -136,8 +171,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     height: 40,
     elevation: 5,
+    marginHorizontal: 10,
     marginBottom: 20,
-    marginTop: 20,
+    marginTop: 10,
   },
   input: { flex: 1, fontSize: 18, color: "#000" },
   loaderContainer: {
@@ -148,7 +184,7 @@ const styles = StyleSheet.create({
   noItemsContainer: {
     position: "absolute",
     top: "50%",
-    left: 0,  // Alineado al borde izquierdo
+    left: 0, // Alineado al borde izquierdo
     right: 0, // Alineado al borde derecho
     justifyContent: "center",
     alignItems: "center",
@@ -162,9 +198,11 @@ const styles = StyleSheet.create({
   backButton: {
     flexDirection: "row",
     alignItems: "center",
+    marginHorizontal: 10,
+    marginTop: 10,
     marginBottom: 10,
   },
-  
+
   backText: {
     fontSize: 16,
     marginLeft: 5,
