@@ -28,8 +28,7 @@ const SelectEventDate = observer(() => {
   const [pickerMode, setPickerMode] = useState<"date" | "time">("date");
   const [pickerTarget, setPickerTarget] = useState("");
   const router = useRouter();
-  const { eventStore } = useStores();
-
+  const { eventStore,toastStore} = useStores();
   const { formValues, setFieldValue, handleSubmit, errors } =
     useForm<EventForm>({
       defaultValues: {
@@ -59,6 +58,7 @@ const SelectEventDate = observer(() => {
     });
 
   const handleDateChange = (selectedDate: Date) => {
+    validateDate(selectedDate)
     if (selectedDate) {
       if (pickerTarget === "date") setFieldValue("date", selectedDate as any);
       else if (pickerTarget === "start")
@@ -68,7 +68,26 @@ const SelectEventDate = observer(() => {
     }
     setDatePickerVisibility(false);
   };
+const validateDate=(selectedDate: Date)=>{
+  if (selectedDate) {
+    // Validar si se está seleccionando una fecha anterior a mañana
+    if (pickerTarget === "date") {
+      const tomorrow = new Date();
+      tomorrow.setHours(0, 0, 0, 0);
+      tomorrow.setDate(tomorrow.getDate() + 1);
 
+      const selected = new Date(selectedDate);
+      selected.setHours(0, 0, 0, 0);
+
+      if (selected < tomorrow) {
+        toastStore.addToast("No se puede seleccionar una fecha anterior a mañana", "warning");
+        return;
+      }
+
+
+  }
+}
+}
   const showDatePicker = (
     target: "date" | "start" | "end",
     mode: "date" | "time"
@@ -190,7 +209,7 @@ const SelectEventDate = observer(() => {
         isVisible={isDatePickerVisible}
         mode={pickerMode}
         display={Platform.OS === "ios" ? "spinner" : "default"}
-        minimumDate={pickerTarget === "date" ? new Date() : undefined}
+        minimumDate={pickerTarget === "date" ? new Date(new Date().setDate(new Date().getDate() + 1)) : undefined}
         onConfirm={handleDateChange}
         onCancel={() => setDatePickerVisibility(false)}
         locale={pickerMode === "date" ? "es_ES" : undefined}

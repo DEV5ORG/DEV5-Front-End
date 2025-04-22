@@ -28,7 +28,7 @@ export interface IItemsRecord {
 
 const defaultEvent: IEvent = {
   eventName: "",
-  date: new Date(),
+  date: new Date(new Date().setDate(new Date().getDate() + 1)) ,
   startTime: new Date(),
   endTime: new Date(),
   guestCount: 0,
