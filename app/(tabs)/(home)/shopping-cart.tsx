@@ -7,6 +7,7 @@ import useShoppingCart from "@/hooks/use-shopping-cart";
 import { ServiceCategory } from "@/interfaces/service-category";
 import { createEvent } from "@/services/events.service";
 import { formatEventDate } from "@/utils/date.utils";
+import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { toJS } from "mobx";
 import { observer } from "mobx-react-lite";
@@ -49,7 +50,12 @@ const ShoppingCart = observer(() => {
     creatingEvent || !hasItems || !eventName || !location;
 
   return (
+    
     <View style={{ flex: 1 }}>
+        <Pressable style={styles.backButton} onPress={() => router.back()}>
+        <MaterialIcons name="arrow-back" size={24} color="black" />
+        <Text style={styles.backText}>Atrás</Text>
+      </Pressable>
       <ScrollView
         contentContainerStyle={styles.container}
         showsVerticalScrollIndicator={false}
@@ -214,6 +220,19 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 14,
     textAlign: "center",
+  },
+  backButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginHorizontal: 10,
+    marginTop: 10,
+    marginBottom: 10,
+  },
+
+  backText: {
+    fontSize: 16,
+    marginLeft: 5,
+    color: "#000",
   },
 });
 

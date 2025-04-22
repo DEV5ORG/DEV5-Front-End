@@ -190,7 +190,7 @@ const SelectEventDate = observer(() => {
         isVisible={isDatePickerVisible}
         mode={pickerMode}
         display={Platform.OS === "ios" ? "spinner" : "default"}
-        minimumDate={pickerTarget === "date" ? new Date() : undefined}
+        minimumDate={pickerTarget === "date" ? new Date(new Date().setDate(new Date().getDate() + 1)) : undefined}
         onConfirm={handleDateChange}
         onCancel={() => setDatePickerVisibility(false)}
         locale={pickerMode === "date" ? "es_ES" : undefined}
