@@ -12,3 +12,20 @@ export const formatDate = (dateString: string): string => {
 
   return `${day}-${month}-${year} ${hours}:${minutes} ${ampm}`;
 };
+
+export const formatEventDate = (date: Date, start: Date, end: Date) => {
+  const formatTime = (d: Date) =>
+    d.toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    });
+
+  const formatDate = date.toLocaleDateString("es-ES", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+
+  return `${formatDate}, ${formatTime(start)} – ${formatTime(end)}`;
+};

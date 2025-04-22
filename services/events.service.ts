@@ -1,4 +1,6 @@
+import ICreateEventPayload from "@/interfaces/requests/create-event.interface";
 import api from "./axios-instance";
+import axios from "axios";
 
 export const getEventsForUser = async (userId: string) => {
   try {
@@ -18,5 +20,16 @@ export const getEventsCountByUser = async (userId: string) => {
     return data;
   } catch (error) {
     throw new Error("Hubo un error al cargar la información.");
+  }
+};
+
+export const createEvent = async (createEventPayload: ICreateEventPayload) => {
+  try {
+    await api.post("/api/eventos", createEventPayload);
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const errorMessage = error.response?.data;
+      throw new Error(errorMessage || "Ha ocurrido un error.");
+    }
   }
 };
