@@ -1,4 +1,80 @@
-# 📱 React Native App con Expo
+# Equipo de desarrollo
+- Douglas Conejo Cascante
+- Elizabeth Sequeira Suárez
+- Steven Montoya Calderón
+- Andrés Quesada Arias
+- Diego Fiatt Vargas
+
+# Descripción del Proyecto
+Organizar un evento es un proceso fragmentado y poco eficiente. Actualmente, los usuarios deben buscar, contactar y coordinar con múltiples proveedores de manera independiente, lo que genera una gran inversión de tiempo y esfuerzo. Además, la falta de una plataforma centralizada dificulta la comparación de precios, disponibilidad y calidad del servicio, lo que puede llevar a experiencias insatisfactorias o a sobrecostos inesperados.
+
+La solución propuesta es una aplicación móvil que centraliza todos los servicios necesarios para la organización de eventos. A través de esta plataforma, los usuarios podrán buscar lugares según su presupuesto y número de invitados, reservar espacios con fecha y hora específica, contratar servicios de comida y entretenimiento.
+
+# Requisitos Iniciales
+### Requisitos funcionales
+#### Gestión de Usuarios y Autenticación
+- El sistema debe permitir el registro de usuarios mediante correo electrónico y contraseña.
+- El sistema debe permitir al usuario ingresar con su correo electrónico y contraseña.
+- El sistema debe permitir la recuperación de contraseña mediante "¿Olvidaste tu contraseña?".
+- Los usuarios deben poder gestionar su perfil personal.
+#### Gestión de Eventos
+- Los usuarios clientes y administradores deben poder crear eventos con la siguiente información:
+  - Nombre del evento
+  - Fecha y hora
+  - Ubicación
+  - Proveedor y selección de comida 
+  - Entretenimiento
+  - Capacidad máxima
+  - Imágenes para invitación del evento
+  - Descripción
+  - Categoría del evento
+- Búsqueda y Visualización de Eventos
+- Los usuarios clientes y administradores deben poder buscar eventos mediante filtros:
+  - Tipo de evento
+  - Ubicación
+- El sistema debe mostrar los eventos en formato de lista con imágenes y detalles básicos como nombre, fecha, hora y lugar
+- Los usuarios clientes deben poder ver detalles completos de los eventos que les pertenezcan.
+- Los usuarios administradores deben poder ver detalles completos de cada evento existente.
+#### Sistema de Reservas
+- Los usuarios deben poder seleccionar fecha y hora específica para su reserva
+- Al momento de que el usuario intenta hacer una reservación de un evento, el sistema debe validar la disponibilidad de fechas.
+- El sistema debe generar confirmaciones de reserva
+- Los usuarios deben poder ver el historial de sus reservas
+- El sistema debe mostrar un carrito en donde se muestran los detalles de los eventos reservados por el usuario
+- El sistema debe mostrar al usuario una invitación luego de haber realizado el pago del evento
+- El sistema debe permitir compartir la invitación del evento
+### Requisitos no funcionales
+#### Rendimiento
+- La aplicación debe cargar en menos de 3 segundos
+- Las búsquedas deben mostrar resultados en menos de 2 segundos
+- El sistema debe soportar al menos 1000 usuarios concurrentes
+- La aplicación debe funcionar sin interrupciones 24/7
+#### Seguridad
+- Las contraseñas deben almacenarse utilizando algoritmos de hash seguros
+- Las rutas tanto en la interfaz de usuario como en la api deben estar protegidas por permisos de usuario.
+#### Usabilidad
+- La interfaz debe ser intuitiva y fácil de usar
+- La aplicación debe ser responsive y adaptarse a diferentes tamaños de pantalla
+- La aplicación debe seguir las guías de diseño de iOS y Android
+- El sistema debe proporcionar feedback claro sobre las acciones realizadas
+#### Compatibilidad
+La aplicación debe funcionar en iOS 13 o superior
+La aplicación debe funcionar en Android 8.0 o superior
+
+# Diseño de la Base de Datos
+![BD-DEV5 (2)](https://github.com/user-attachments/assets/ed6c6cb6-002d-4a3d-a1b1-f40e750a1a20)
+
+# Diagrama de Arquitectura
+![Diagrama-de-Arquitectura (2)](https://github.com/user-attachments/assets/099ea7bf-ab1f-46db-bbb8-1b3740ccb04e)
+
+# Tecnologías utilizadas
+- React Native
+- Springboot
+
+# Manual de Usuario
+Por hacer
+  
+# 📱 React Native App con Expo - Manual de Instalación
 
 ## 📌 Requisitos previos
 
@@ -47,7 +123,7 @@ Aparecerá un código QR en la terminal. Escanéalo con la app **Expo Go** para 
 
 ### 4️⃣ Variables de ambiente
 ```sh
-EXPO_PUBLIC_API_URL=https://dev5-back-end.onrender.com
+EXPO_PUBLIC_API_URL=https://dev5-back-end-ypiu.onrender.com
 ```
 
 ## 📖 Guía de desarrollo
