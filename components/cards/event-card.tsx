@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   toggleDetailsButton: {
-    backgroundColor: Colors.blue,
+    backgroundColor: Colors.blueButton,
     paddingVertical: 8,
     paddingHorizontal: 14,
     borderRadius: 8,

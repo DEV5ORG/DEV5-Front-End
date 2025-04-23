@@ -18,9 +18,6 @@ const HomeLayout = () => {
         name="index"
         options={{
           headerTitle: () => <ThemedText>Inicio</ThemedText>,
-          headerRight: () => (
-            <AntDesign size={24} color={Colors.black} name="bells" />
-          ),
         }}
       />
       <Stack.Screen
