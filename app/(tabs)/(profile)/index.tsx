@@ -39,7 +39,7 @@ const Profile = observer(() => {
       <View style={styles.cardContainer}>
         {/* Avatar con inicial, no incluimos imagen de perfil en el scope */}
         <View style={styles.avatar}>
-          <Text style={styles.avatarText}>{firstLetter}</Text>
+          <MaterialIcons name="person" size={72} color="#fff" />
         </View>
         <Text style={styles.mainText}>{user?.name}</Text>
 
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   avatar: {
-    backgroundColor: "#999",
+    backgroundColor: "#6399B6",
     width: 150,
     height: 150,
     borderRadius: 1000,
@@ -100,9 +100,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 20,
   },
-  avatarText: {
-    color: "#fff",
-    fontSize: 48,
+  avatarImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 1000,
   },
   statsContainer: {
     flexDirection: "row",

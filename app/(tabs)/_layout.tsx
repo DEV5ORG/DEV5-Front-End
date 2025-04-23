@@ -42,15 +42,6 @@ export default function TabLayout() {
           }}
         />
         <Tabs.Screen
-          name="(payment)"
-          options={{
-            title: "Pago",
-            tabBarIcon: ({ color }) => (
-              <MaterialIcons size={28} name="attach-money" color={color} />
-            ),
-          }}
-        />
-        <Tabs.Screen
           name="(profile)"
           options={{
             title: "Perfil",
