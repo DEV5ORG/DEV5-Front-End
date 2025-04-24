@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   ScrollView,
   ActivityIndicator,
@@ -34,10 +34,10 @@ const Home = observer(() => {
           let fetchedEvents: EventCardProps[] | undefined; // Initialize fetchedEvents as an empty array
           if (user?.id) {
             fetchedEvents = await getEventsForUser(user.id);
-            console
+            console;
             if (fetchedEvents == undefined) {
               fetchedEvents = []; // Handle the case where user or user.id is null
-            }// Fetch events for user if ID is present
+            } // Fetch events for user if ID is present
           } else {
             fetchedEvents = []; // Handle the case where user or user.id is null
           }
@@ -61,7 +61,9 @@ const Home = observer(() => {
                     ? item.item.descripcion
                     : "", // Safe navigation operator
                   itemPrice: item?.item?.precio ? item.item.precio : "", // Safe navigation operator
-                  itemLocation: item?.item?.ubicacion ? item.item.ubicacion : "", // Safe navigation operator
+                  itemLocation: item?.item?.ubicacion
+                    ? item.item.ubicacion
+                    : "", // Safe navigation operator
                   itemImage: item?.item?.imagen ? item.item.imagen : "", // Safe navigation operator
                   itemQuantity: item?.cantidad ? item.cantidad : 0, // Safe navigation operator
                   itemTotalPrice: item?.precioTotal ? item.precioTotal : 0, // Safe navigation operator
@@ -91,7 +93,7 @@ const Home = observer(() => {
   const renderEventCard = (event: any, index: number) => (
     <EventCard
       key={index}
-      imagen={event.image}
+      imagen={event.imagen}
       title={event.title}
       date={event.date}
       location={event.location}
@@ -107,7 +109,6 @@ const Home = observer(() => {
       contentContainerStyle={styles.container}
       showsVerticalScrollIndicator={false}
     >
-
       {loading ? (
         <View style={styles.loaderContainer}>
           <ActivityIndicator size="large" color={Colors.activityIndicator} />
@@ -137,7 +138,6 @@ const Home = observer(() => {
             resizeMode="contain"
           />
         </View>
-
       ) : (
         <View>
           <View style={styles.header}>
@@ -147,11 +147,11 @@ const Home = observer(() => {
               </ThemedText>
             </View>
             <TouchableOpacity
-            style={styles.newEventButton}
-            onPress={handleNewEvent}
-          >
-            <ThemedText style={styles.buttonText}>Nuevo Evento</ThemedText>
-          </TouchableOpacity>
+              style={styles.newEventButton}
+              onPress={handleNewEvent}
+            >
+              <ThemedText style={styles.buttonText}>Nuevo Evento</ThemedText>
+            </TouchableOpacity>
           </View>
           <View style={styles.eventsList}>{events.map(renderEventCard)}</View>
         </View>

@@ -2,8 +2,9 @@ import { Colors } from "@/constants/Colors";
 import { useStores } from "@/context/root-store-provider";
 import { getEventsCountByUser } from "@/services/events.service";
 import { MaterialIcons } from "@expo/vector-icons";
+import { useFocusEffect } from "@react-navigation/native";
 import { observer } from "mobx-react-lite";
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 const Profile = observer(() => {
@@ -11,28 +12,28 @@ const Profile = observer(() => {
   const [eventsCount, setEventsCount] = useState(0);
   const { user } = authStore;
 
-  useEffect(() => {
-    const fetchProfileInfo = async () => {
-      if (user?.id) {
-        try {
-          const count = await getEventsCountByUser(user?.id);
-          setEventsCount(count);
-        } catch (error) {
-          if (error instanceof Error) {
-            console.error(error.message);
+  useFocusEffect(
+    useCallback(() => {
+      const fetchProfileInfo = async () => {
+        if (user?.id) {
+          try {
+            const count = await getEventsCountByUser(user?.id);
+            setEventsCount(count);
+          } catch (error) {
+            if (error instanceof Error) {
+              console.error(error.message);
+            }
           }
         }
-      }
-    };
+      };
 
-    fetchProfileInfo();
-  }, [user?.id]);
+      fetchProfileInfo();
+    }, [user?.id])
+  );
 
   const onLogOut = () => {
     authStore.signOut();
   };
-
-  const firstLetter = user?.name?.[0]?.toUpperCase() ?? "?";
 
   return (
     <View style={styles.container}>
@@ -101,8 +102,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   avatarImage: {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
     borderRadius: 1000,
   },
   statsContainer: {

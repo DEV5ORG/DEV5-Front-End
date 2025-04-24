@@ -13,6 +13,7 @@ export interface IEvent {
   placeHourlyRate: number;
   totalCost: number;
   location: string;
+  image: string;
   userId: number;
 }
 
@@ -28,13 +29,14 @@ export interface IItemsRecord {
 
 const defaultEvent: IEvent = {
   eventName: "",
-  date: new Date(new Date().setDate(new Date().getDate() + 1)) ,
+  date: new Date(new Date().setDate(new Date().getDate() + 1)),
   startTime: new Date(),
   endTime: new Date(),
   guestCount: 0,
   placeHourlyRate: 0,
   totalCost: 0,
   location: "",
+  image: "",
   userId: 0,
 };
 
@@ -175,6 +177,7 @@ export class EventStore {
       guestCount,
       totalCost,
       location,
+      image,
       userId,
     } = this.event;
 
@@ -225,8 +228,7 @@ export class EventStore {
       nombreEvento: eventName,
       ubicacion: location,
       // URL default, no vamos a meter la funcionalidad de agregar imagenes
-      imagen:
-        "https://res.cloudinary.com/difrw7gue/image/upload/v1745210595/pexels-photo-709552_rvz2xx.jpg",
+      imagen: image,
       editable: false,
       fechaHoraInicio: startDate,
       fechaHoraFinalizacion: endDate,
