@@ -79,6 +79,7 @@ const Products = () => {
       eventStore.setEvent({
         location: item.ubicacion,
         placeHourlyRate: item.precio,
+        image: item.imagen,
       });
       router.push(`/select-event-date?id=${serviceId}`);
     } else {
