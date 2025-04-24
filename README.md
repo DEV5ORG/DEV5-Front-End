@@ -72,9 +72,32 @@ La aplicación debe funcionar en Android 8.0 o superior
 - Springboot
 
 # Manual de Usuario
-Por hacer
-  
-# 📱 React Native App con Expo - Manual de Instalación
+
+#### 🧩 ¿Qué puedes hacer?
+
+- Manejar eventos  
+  <br />
+  <img width="245" alt="image" src="https://github.com/user-attachments/assets/8d64d19b-bea4-4f58-99bf-09f1ce850b36" />
+
+  Sin eventos? Crea uno  
+  <br />
+  <img width="244" alt="image" src="https://github.com/user-attachments/assets/74d35041-d239-4b50-96b7-626a34a65cbb" />
+
+- Reservar lugares  
+  <br />
+  <img width="245" alt="image" src="https://github.com/user-attachments/assets/a7d37b2f-916a-44a4-8f36-b9fde4394c6b" />
+
+- Agregar productos (como pizzas) a tu carrito, y todo lo que necesites para el evento  
+  <br />
+  <img width="245" alt="image" src="https://github.com/user-attachments/assets/81a62c4d-5795-435f-85d3-9de3dae5bc62" />
+  <br />
+  <img width="246" alt="image" src="https://github.com/user-attachments/assets/1b8b7830-558c-45aa-8a15-d6ea943d01f5" />
+
+- Llevar monitoreo de eventos activos  
+  <br />
+  <img width="245" alt="image" src="https://github.com/user-attachments/assets/0eace813-ad2b-4816-bd5b-69b319e543a4" />
+
+  # 📱 React Native App con Expo - Manual de Instalación
 
 ## 📌 Requisitos previos
 
